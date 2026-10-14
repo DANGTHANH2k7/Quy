@@ -2,10 +2,5 @@
   "name": "q-quy",
   "version": "1.0.0",
   "type": "module",
-  "description": "Q - Quỹ: Hệ thống theo dõi thu chi & đóng quỹ tự động qua VietQR & SePay Webhook",
-  "main": "api/members.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {}
+  "description": "Q - Quỹ: Hệ thống theo dõi thu chi & đóng quỹ tự động qua VietQR & SePay Webhook"
 }

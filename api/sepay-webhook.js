@@ -60,11 +60,19 @@ export default async function handler(req, res) {
   const SEPAY_API_KEY = process.env.SEPAY_API_KEY;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // Hỗ trợ kiểm tra endpoint qua trình duyệt hoặc ping test
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      status: 'active',
+      message: 'SePay Webhook Endpoint đang hoạt động sẵn sàng tiếp nhận POST request'
+    });
   }
 
   if (req.method !== 'POST') {
