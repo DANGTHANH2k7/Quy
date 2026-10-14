@@ -25,32 +25,49 @@ function matchMember(content) {
   if (!content) return null;
   const clean = removeVietnameseTones(content.toLowerCase()).trim();
 
-  // Kiểm tra tiền tố quỹ: q, quy, 2k6
-  const hasFundPrefix = /(?:^|\s|[._-])(?:q|quy|2k6)(?:$|\s|[._-])/i.test(clean);
-
-  for (const m of INITIAL_MEMBERS) {
-    const stt = String(m.id).padStart(2, '0');
-    const sttRegex = new RegExp(`(?:^|\\s|[._-])(?:q|quy|2k6)[\\s._-]*0?${m.id}(?:$|\\s|[._-])`, 'i');
-    const hasSttMatch = (hasFundPrefix && (
-      clean.includes(stt) ||
-      clean.includes(' ' + m.id + ' ') ||
-      clean.includes(' ' + m.id + '.') ||
-      clean.startsWith(m.id + ' ') ||
-      clean.endsWith(' ' + m.id)
-    )) || sttRegex.test(clean);
-    
-    let hasNameMatch = false;
-    if (m.name) {
-      const nameParts = removeVietnameseTones(m.name.toLowerCase()).trim().split(/\s+/);
-      const lastName = nameParts[nameParts.length - 1];
-      const fullName = removeVietnameseTones(m.name.toLowerCase()).trim();
-      hasNameMatch = clean.includes(fullName) || (hasFundPrefix && clean.includes(lastName));
+  // TẦNG 1: ƯU TIÊN SỐ 1 TUYỆT ĐỐI - Khớp chính xác theo STT kèm tiền tố quỹ
+  // Bắt các định dạng: Q30, Q 30, Q-30, Q_30, QUY 30, 2K6 30
+  const sttMatch = clean.match(/(?:^|\s|[._-])(?:q|quy|2k6)[\s._-]*0*(\d{1,2})(?:$|\s|[._-])/i);
+  if (sttMatch && sttMatch[1]) {
+    const parsedId = parseInt(sttMatch[1], 10);
+    const member = INITIAL_MEMBERS.find(m => m.id === parsedId);
+    if (member) {
+      return member.id;
     }
+  }
 
-    if (hasSttMatch || hasNameMatch) {
+  // TẦNG 2: Khớp theo Họ và tên đầy đủ (Không dấu)
+  // Ưu tiên tên có độ dài dài hơn trước để tránh trùng lặp
+  const sortedByNameLength = [...INITIAL_MEMBERS]
+    .filter(m => m.name && m.name.trim())
+    .sort((a, b) => b.name.length - a.name.length);
+
+  for (const m of sortedByNameLength) {
+    const fullName = removeVietnameseTones(m.name.toLowerCase()).trim();
+    if (fullName && clean.includes(fullName)) {
       return m.id;
     }
   }
+
+  // TẦNG 3: Khớp theo Tên gọi (Last Name) ĐỘC LẬP kèm tiền tố quỹ
+  // Chỉ kiểm tra khi có tiền tố quỹ (q, quy, 2k6) VÀ tên phải là từ đứng độc lập (Word boundary)
+  // Chống lỗi nghiêm trọng: từ "an" bị dính vào trong chữ "dang" hay "thanh"
+  const hasFundPrefix = /(?:^|\s|[._-])(?:q|quy|2k6)(?:$|\s|[._-])/i.test(clean);
+  if (hasFundPrefix) {
+    for (const m of INITIAL_MEMBERS) {
+      if (!m.name) continue;
+      const nameParts = removeVietnameseTones(m.name.toLowerCase()).trim().split(/\s+/);
+      const lastName = nameParts[nameParts.length - 1];
+      if (!lastName) continue;
+
+      // Bắt buộc lastName phải đứng độc lập giữa các khoảng trắng hoặc dấu phân cách
+      const wordRegex = new RegExp(`(?:^|\\s|[._-])${lastName}(?:$|\\s|[._-])`, 'i');
+      if (wordRegex.test(clean)) {
+        return m.id;
+      }
+    }
+  }
+
   return null;
 }
 
