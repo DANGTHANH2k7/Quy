@@ -854,7 +854,8 @@
   let members = (function() {
     try {
       localStorage.removeItem('q_quy_members_v3');
-      const cached = localStorage.getItem('q_quy_members_v4');
+      localStorage.removeItem('q_quy_members_v4');
+      const cached = localStorage.getItem('q_quy_members_v5');
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length === MEMBER_NAMES.length) {
@@ -911,22 +912,14 @@
       if (res.ok) {
         const data = await res.json();
         if (data && data.members && Array.isArray(data.members)) {
-          // Monotonic Merge: Số tiền nộp chỉ có thể tăng hoặc giữ nguyên
-          const localAmountMap = new Map();
-          members.forEach(m => localAmountMap.set(m.id, Number(m.paidAmount || 0)));
-
-          // Lấy danh sách thành viên mới nhất từ server
-          members = data.members.map(sm => {
-            const localAmt = localAmountMap.get(sm.id) || 0;
-            const serverAmt = Number(sm.paidAmount || 0);
-            return {
-              ...sm,
-              paidAmount: Math.max(localAmt, serverAmt)
-            };
-          });
+          // Lấy danh sách thành viên và số dư chính xác từ server làm chuẩn
+          members = data.members.map(sm => ({
+            ...sm,
+            paidAmount: Number(sm.paidAmount || 0)
+          }));
 
           try {
-            localStorage.setItem('q_quy_members_v4', JSON.stringify(members));
+            localStorage.setItem('q_quy_members_v5', JSON.stringify(members));
           } catch(e) {}
 
           updateKPIs();
