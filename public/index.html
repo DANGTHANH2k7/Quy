@@ -567,14 +567,14 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-title">Sĩ số thành viên</div>
-      <div class="stat-value" id="kpi-total">22</div>
+      <div class="stat-value" id="kpi-total">31</div>
       <div class="stat-sub">Tổng danh sách</div>
     </div>
 
     <div class="stat-card">
       <div class="stat-title">Đạt mốc chỉ tiêu</div>
-      <div class="stat-value" style="color: var(--success);" id="kpi-green-count">0 / 22</div>
-      <div class="stat-sub" id="kpi-green-desc">Đạt ngưỡng xanh</div>
+      <div class="stat-value" style="color: var(--success);" id="kpi-green-count">0 / 31</div>
+      <div class="stat-sub" id="kpi-green-desc">Đã đủ</div>
     </div>
 
     <div class="stat-card">
@@ -585,7 +585,7 @@
 
     <div class="stat-card">
       <div class="stat-title">Đóng một phần / Chưa đủ</div>
-      <div class="stat-value" style="color: var(--warning);" id="kpi-remaining-count">22</div>
+      <div class="stat-value" style="color: var(--warning);" id="kpi-remaining-count">31</div>
       <div class="stat-sub">Cần đóng bổ sung</div>
     </div>
   </div>
@@ -617,10 +617,10 @@
     </div>
 
     <div class="filter-tabs">
-      <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (22)</button>
+      <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (31)</button>
       <button class="tab-btn" data-filter="green" id="tab-green">🟢 Đạt mốc (0)</button>
       <button class="tab-btn" data-filter="yellow" id="tab-yellow">🟡 Một phần (0)</button>
-      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đủ (22)</button>
+      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đủ (31)</button>
     </div>
 
     <div class="toolbar-actions">
@@ -701,9 +701,43 @@
 
   const API_ENDPOINT = '/api/members';
 
-  const DEFAULT_MEMBERS = Array.from({ length: 22 }, (_, i) => ({
+  const MEMBER_NAMES = [
+    "Trương Hữu An",
+    "Hà Duyên Hải Anh",
+    "Lê Trung Anh",
+    "Nguyễn Danh Bảo",
+    "Lê Minh Bách Chuyên",
+    "Trần Việt Dũng",
+    "Lê Anh Duy",
+    "Chu Thế Đạt",
+    "Nguyễn Quang Đạt",
+    "Lê Minh Hiếu",
+    "Võ Tá Hoàng",
+    "Nguyễn Tuấn Hùng",
+    "Phan Đức Huy",
+    "Phan Trung Kiên",
+    "Nguyễn Việt Khánh",
+    "Hoàng Minh Long",
+    "Trương Quốc Mạnh",
+    "Lê Hoàng Minh",
+    "Lê Quang Minh",
+    "Nguyễn Ngọc Minh",
+    "Nguyễn An Nguyên",
+    "Phạm Quang Nhật",
+    "Trần Đức Phúc",
+    "Nguyễn Ngọc Quang",
+    "Trần Lê Minh Quân",
+    "Cao Ngọc Trường Sơn",
+    "Nguyễn Khắc Thành Tôn",
+    "Lê Tuấn Tú",
+    "Bùi Minh Thái",
+    "Nguyễn Đăng Thành",
+    "Cao Anh Vũ"
+  ];
+
+  const DEFAULT_MEMBERS = MEMBER_NAMES.map((name, i) => ({
     id: i + 1,
-    name: "",
+    name,
     paidAmount: 0
   }));
 
@@ -714,11 +748,11 @@
   // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
   let members = (function() {
     try {
-      const cached = localStorage.getItem('q_quy_members_v3');
+      localStorage.removeItem('q_quy_members_v3');
+      const cached = localStorage.getItem('q_quy_members_v4');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length === 22) {
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed) && parsed.length === MEMBER_NAMES.length) {
           return parsed;
         }
       }
@@ -759,43 +793,35 @@
 
   // CẬP NHẬT GIAO DIỆN QUY TẮC MỐC MÀU
   function updateRulesLegendUI() {
-    document.getElementById('legend-green-label').textContent = `🟢 Xanh lá: ≥ ${formatMoney(colorRules.greenMin)}`;
-    document.getElementById('legend-yellow-label').textContent = `🟡 Vàng: ≥ ${formatMoney(colorRules.yellowMin)}`;
-    document.getElementById('legend-red-label').textContent = `🔴 Đỏ: < ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-green-label').textContent = `🟢 Đi ăn: ≥ ${formatMoney(colorRules.greenMin)}`;
+    document.getElementById('legend-yellow-label').textContent = `🟡 Tiền quà: ≥ ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-red-label').textContent = `🔴 Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
   }
 
   // FETCH DỮ LIỆU TỪ SERVER VERCEL API
   async function fetchServerData() {
+    if (window.location.protocol === 'file:') return;
     try {
       const res = await fetch(API_ENDPOINT);
       if (res.ok) {
         const data = await res.json();
-        if (data && data.members) {
         if (data && data.members && Array.isArray(data.members)) {
           // Monotonic Merge: Số tiền nộp chỉ có thể tăng hoặc giữ nguyên
-          const serverAmountMap = new Map();
-          data.members.forEach(m => serverAmountMap.set(m.id, Number(m.paidAmount || 0)));
           const localAmountMap = new Map();
           members.forEach(m => localAmountMap.set(m.id, Number(m.paidAmount || 0)));
 
-          members = members.map(m => {
-            const serverAmt = serverAmountMap.get(m.id) || 0;
-            const currentAmt = Number(m.paidAmount || 0);
           // Lấy danh sách thành viên mới nhất từ server
           members = data.members.map(sm => {
             const localAmt = localAmountMap.get(sm.id) || 0;
             const serverAmt = Number(sm.paidAmount || 0);
             return {
-              ...m,
-              name: m.name || (data.members.find(x => x.id === m.id) || {}).name || '',
-              paidAmount: Math.max(currentAmt, serverAmt)
               ...sm,
               paidAmount: Math.max(localAmt, serverAmt)
             };
           });
 
           try {
-            localStorage.setItem('q_quy_members_v3', JSON.stringify(members));
+            localStorage.setItem('q_quy_members_v4', JSON.stringify(members));
           } catch(e) {}
 
           updateKPIs();
@@ -838,7 +864,7 @@
     document.getElementById('tab-all').textContent = `Tất cả (${total})`;
     document.getElementById('tab-green').textContent = `🟢 Đạt mốc (${greenCount})`;
     document.getElementById('tab-yellow').textContent = `🟡 Một phần (${yellowCount})`;
-    document.getElementById('tab-red').textContent = `🔴 Chưa đạt (${redCount})`;
+    document.getElementById('tab-red').textContent = `🔴 Chưa đủ (${redCount})`;
 
     if (greenCount === total && total > 0) {
       triggerConfetti();
