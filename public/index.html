@@ -557,8 +557,8 @@
     
     <div class="banner-meta">
       <span>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</span>
-      <span>💳 <strong>STK:</strong> 0123456789</span>
-      <span>👤 <strong>Chủ TK:</strong> CHỦ TÀI KHOẢN</span>
+      <span>💳 <strong>STK:</strong> 88808112007999</span>
+      <span>👤 <strong>Chủ TK:</strong> NGUYEN DANG THANH</span>
       <span>⚙️ <strong>Cú pháp:</strong> <code>Q [STT] [TÊN]</code></span>
     </div>
   </div>
@@ -607,9 +607,6 @@
         <span id="legend-red-label">🔴 Đỏ: &lt; 60.000 đ</span>
       </div>
     </div>
-    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;" onclick="openSettingsModal()">
-      ⚙️ Chỉnh sửa mốc màu
-    </button>
   </div>
 
   <!-- TOOLBAR -->
@@ -665,9 +662,9 @@
 
     <div class="qr-bank-details">
       <div>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</div>
-      <div>💳 <strong>Số tài khoản:</strong> <code>0123456789</code></div>
-      <div>👤 <strong>Chủ tài khoản:</strong> <strong>CHỦ TÀI KHOẢN</strong></div>
-      <div>💰 <strong>Số tiền đề xuất:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">99.000 đ</strong></div>
+      <div>💳 <strong>Số tài khoản:</strong> <code>88808112007999</code></div>
+      <div>👤 <strong>Chủ tài khoản:</strong> <strong>NGUYEN DANG THANH</strong></div>
+      <div>💰 <strong>Số tiền đề xuất:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">210.000 đ</strong></div>
       <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border);">
         📝 <strong>Nội dung:</strong> <span class="code-memo" id="qr-memo-code"></span>
       </div>
@@ -687,37 +684,6 @@
   </div>
 </div>
 
-<!-- MODAL CẤU HÌNH MỐC MÀU -->
-<div class="modal-backdrop" id="modal-settings">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('modal-settings')">&times;</button>
-    <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">⚙️ Cấu Hình Mốc Đổi Màu</h3>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-      Tự cài đặt ngưỡng số tiền để bảng theo dõi đổi màu tự động:
-    </p>
-
-    <div class="form-group">
-      <label for="input-green-min">🟢 Mốc Xanh lá (Đạt chỉ tiêu / Vượt mức):</label>
-      <input type="number" id="input-green-min" step="10000" placeholder="Ví dụ: 210000">
-      <small style="color: var(--text-muted); font-size: 12px;">Số tiền nộp từ mức này trở lên sẽ hiển thị màu Xanh lá.</small>
-    </div>
-
-    <div class="form-group">
-      <label for="input-yellow-min">🟡 Mốc Vàng (Đã nộp một phần):</label>
-      <input type="number" id="input-yellow-min" step="10000" placeholder="Ví dụ: 60000">
-      <small style="color: var(--text-muted); font-size: 12px;">Số tiền từ mốc này đến dưới mốc Xanh sẽ hiển thị màu Vàng. Dưới mốc này là Đỏ.</small>
-    </div>
-
-    <div style="display: flex; gap: 8px; margin-top: 20px;">
-      <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="saveColorRules()">
-        💾 Lưu cấu hình
-      </button>
-      <button class="btn btn-outline" onclick="resetColorRules()">
-        Khôi phục mặc định
-      </button>
-    </div>
-  </div>
-</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast">
@@ -728,14 +694,12 @@
 <script>
   const BANK_CONFIG = {
     bin: '970422',
-    accountNo: '0123456789',
-    accountName: 'CHỦ TÀI KHOẢN',
-    suggestedAmount: 99000
+    accountNo: '88808112007999',
+    accountName: 'NGUYEN DANG THANH',
+    suggestedAmount: 210000
   };
 
-  const API_ENDPOINT = (window.location.protocol === 'file:' || !window.location.origin.includes('vercel.app'))
-    ? 'https://gioitre-2k6-fund.vercel.app/api/members'
-    : '/api/members';
+  const API_ENDPOINT = '/api/members';
 
   const DEFAULT_MEMBERS = Array.from({ length: 22 }, (_, i) => ({
     id: i + 1,
@@ -743,21 +707,9 @@
     paidAmount: 0
   }));
 
-  // Cấu hình quy tắc mốc màu
-  function loadColorRules() {
-    try {
-      const saved = localStorage.getItem('q_quy_color_rules');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.greenMin !== undefined && parsed.yellowMin !== undefined) {
-          return parsed;
-        }
-      }
-    } catch(e) {}
-    return { greenMin: 210000, yellowMin: 60000 };
-  }
-
-  let colorRules = loadColorRules();
+  // Quy tắc mốc màu cố định
+  const colorRules = { greenMin: 210000, yellowMin: 60000 };
+  try { localStorage.removeItem('q_quy_color_rules'); } catch(e) {}
 
   // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
   let members = (function() {
@@ -790,12 +742,12 @@
   function getMemberTier(amount) {
     const amt = Number(amount || 0);
     if (amt >= colorRules.greenMin) {
-      return { tier: 'green', class: 'tier-green', label: '✓ Đạt chỉ tiêu' };
+      return { tier: 'green', class: 'tier-green', label: '✓ Đi ăn' };
     }
     if (amt >= colorRules.yellowMin) {
-      return { tier: 'yellow', class: 'tier-yellow', label: '⏳ Một phần' };
+      return { tier: 'yellow', class: 'tier-yellow', label: '⏳ Đã đủ tiền quà' };
     }
-    return { tier: 'red', class: 'tier-red', label: amt === 0 ? '❌ Chưa nộp' : '⚠️ Chưa đủ mức' };
+    return { tier: 'red', class: 'tier-red', label: amt === 0 ? '❌ Chưa nộp' : '⚠️ Chưa đủ tiền quà' };
   }
 
   function getMemo(member) {
@@ -995,45 +947,7 @@
     document.getElementById('modal-qr').classList.add('open');
   };
 
-  // MODAL CẤU HÌNH MỐC MÀU
-  window.openSettingsModal = function() {
-    document.getElementById('input-green-min').value = colorRules.greenMin;
-    document.getElementById('input-yellow-min').value = colorRules.yellowMin;
-    document.getElementById('modal-settings').classList.add('open');
-  };
 
-  window.saveColorRules = function() {
-    const green = Number(document.getElementById('input-green-min').value) || 210000;
-    const yellow = Number(document.getElementById('input-yellow-min').value) || 60000;
-
-    if (yellow >= green) {
-      alert('Lưu ý: Mốc Vàng phải nhỏ hơn mốc Xanh lá!');
-      return;
-    }
-
-    colorRules = { greenMin: green, yellowMin: yellow };
-    try {
-      localStorage.setItem('q_quy_color_rules', JSON.stringify(colorRules));
-    } catch(e) {}
-
-    updateRulesLegendUI();
-    updateKPIs();
-    renderTable();
-    closeModal('modal-settings');
-    showToast('✅ Đã cập nhật mốc màu thành công!');
-  };
-
-  window.resetColorRules = function() {
-    colorRules = { greenMin: 210000, yellowMin: 60000 };
-    try {
-      localStorage.removeItem('q_quy_color_rules');
-    } catch(e) {}
-    updateRulesLegendUI();
-    updateKPIs();
-    renderTable();
-    closeModal('modal-settings');
-    showToast('🔄 Đã khôi phục mốc màu mặc định');
-  };
 
   window.closeModal = function(id) {
     document.getElementById(id).classList.remove('open');

@@ -6,11 +6,10 @@ Hệ thống quản lý và theo dõi thu chi / đóng quỹ tự động chuyê
 
 ## ✨ Tính năng nổi bật
 
-- **Đổi màu theo mốc tiền tùy biến (Dynamic Color Rules)**:
-  - 🟢 **Xanh lá**: Đạt chỉ tiêu / Vượt mức (Mặc định: $\ge 210.000$ đ).
-  - 🟡 **Vàng**: Đã đóng một phần (Mặc định: $\ge 60.000$ đ).
-  - 🔴 **Đỏ**: Chưa đạt mức tối thiểu (Mặc định: $< 60.000$ đ).
-  - *Cho phép người dùng bấm ⚙️ **Chỉnh sửa mốc màu** ngay trên giao diện để tự điều chỉnh các mốc tiền này theo nhu cầu thực tế (lưu trực tiếp vào `localStorage`).*
+- **Đổi màu trạng thái theo mốc tiền**:
+  - 🟢 **Xanh lá**: Đạt chỉ tiêu / Vượt mức ($\ge 210.000$ đ).
+  - 🟡 **Vàng**: Đã đóng một phần ($\ge 60.000$ đ).
+  - 🔴 **Đỏ**: Chưa đạt mức tối thiểu ($< 60.000$ đ).
 - **Cộng dồn số tiền không giới hạn**: Thành viên có thể chuyển tiền nhiều lần với số tiền tùy ý; hệ thống sử dụng lệnh nguyên tử `HINCRBY` trong Redis để cộng dồn chính xác, không bao giờ lo sai lệch.
 - **Bảo mật Webhook cấp ngân hàng**:
   - **Xác thực Header bí mật**: Chỉ tiếp nhận webhook khi có header `Authorization: Apikey <SECRET>`.
@@ -53,8 +52,8 @@ UPSTASH_REDIS_REST_TOKEN=your_token_here
 ```
 
 ### Bước 3: Cấu hình Danh Sách Thành Viên & Ngân Hàng
-- Mở [api/members.js](file:///Users/dangthanh/Downloads/gioitre-2k6-fund/api/members.js) và [api/sepay-webhook.js](file:///Users/dangthanh/Downloads/gioitre-2k6-fund/api/sepay-webhook.js) để cập nhật danh sách thành viên `INITIAL_MEMBERS`.
-- Cập nhật số tài khoản nhận tiền `BANK_CONFIG` trong [public/index.html](file:///Users/dangthanh/Downloads/gioitre-2k6-fund/public/index.html).
+- Mở [api/members.js](file:///Users/dangthanh/Downloads/Q-Quy/api/members.js) và [api/sepay-webhook.js](file:///Users/dangthanh/Downloads/Q-Quy/api/sepay-webhook.js) để cập nhật danh sách thành viên `INITIAL_MEMBERS`.
+- Cập nhật số tài khoản nhận tiền `BANK_CONFIG` trong [public/index.html](file:///Users/dangthanh/Downloads/Q-Quy/public/index.html).
 
 ### Bước 4: Triển khai lên Vercel
 1. Đẩy code lên GitHub.

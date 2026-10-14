@@ -82,9 +82,9 @@ export default async function handler(req, res) {
       bin: '970422',
       code: 'MB',
       name: 'MBBank',
-      accountNo: '0123456789',
-      accountName: 'CHỦ TÀI KHOẢN',
-      suggestedAmount: 99000
+      accountNo: '88808112007999',
+      accountName: 'NGUYEN DANG THANH',
+      suggestedAmount: 210000
     },
     stats: {
       totalMembers,
