@@ -1,10 +1,6 @@
 // api/sepay-webhook.js
 import crypto from 'crypto';
-
-const INITIAL_MEMBERS = Array.from({ length: 22 }, (_, i) => ({
-  id: i + 1,
-  name: ""
-}));
+import { INITIAL_MEMBERS } from './_members.js';
 
 // Bộ nhớ đệm fallback khi chưa cấu hình Redis
 let fallbackBalances = new Map();

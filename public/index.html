@@ -593,18 +593,18 @@
   <!-- RULES LEGEND BAR -->
   <div class="rules-legend-bar">
     <div class="legend-items">
-      <span style="font-weight: 700;">Quy tắc mốc màu:</span>
+      <span style="font-weight: 700;">Lưu ý:</span>
       <div class="legend-pill" style="color: var(--success);">
         <span class="legend-dot" style="background: var(--success);"></span>
-        <span id="legend-green-label">🟢 Xanh lá: &ge; 210.000 đ</span>
+        <span id="legend-green-label">🟢 Đi ăn: &ge; 210.000 đ</span>
       </div>
       <div class="legend-pill" style="color: var(--warning);">
         <span class="legend-dot" style="background: var(--warning);"></span>
-        <span id="legend-yellow-label">🟡 Vàng: &ge; 60.000 đ</span>
+        <span id="legend-yellow-label">🟡 Tiền quà: &ge; 60.000 đ</span>
       </div>
       <div class="legend-pill" style="color: var(--danger);">
         <span class="legend-dot" style="background: var(--danger);"></span>
-        <span id="legend-red-label">🔴 Đỏ: &lt; 60.000 đ</span>
+        <span id="legend-red-label">🔴 Chưa đủ: &lt; 60.000 đ</span>
       </div>
     </div>
   </div>
@@ -620,7 +620,7 @@
       <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (22)</button>
       <button class="tab-btn" data-filter="green" id="tab-green">🟢 Đạt mốc (0)</button>
       <button class="tab-btn" data-filter="yellow" id="tab-yellow">🟡 Một phần (0)</button>
-      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đạt (22)</button>
+      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đủ (22)</button>
     </div>
 
     <div class="toolbar-actions">
@@ -718,6 +718,7 @@
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length === 22) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       }
@@ -770,17 +771,26 @@
       if (res.ok) {
         const data = await res.json();
         if (data && data.members) {
+        if (data && data.members && Array.isArray(data.members)) {
           // Monotonic Merge: Số tiền nộp chỉ có thể tăng hoặc giữ nguyên
           const serverAmountMap = new Map();
           data.members.forEach(m => serverAmountMap.set(m.id, Number(m.paidAmount || 0)));
+          const localAmountMap = new Map();
+          members.forEach(m => localAmountMap.set(m.id, Number(m.paidAmount || 0)));
 
           members = members.map(m => {
             const serverAmt = serverAmountMap.get(m.id) || 0;
             const currentAmt = Number(m.paidAmount || 0);
+          // Lấy danh sách thành viên mới nhất từ server
+          members = data.members.map(sm => {
+            const localAmt = localAmountMap.get(sm.id) || 0;
+            const serverAmt = Number(sm.paidAmount || 0);
             return {
               ...m,
               name: m.name || (data.members.find(x => x.id === m.id) || {}).name || '',
               paidAmount: Math.max(currentAmt, serverAmt)
+              ...sm,
+              paidAmount: Math.max(localAmt, serverAmt)
             };
           });
 

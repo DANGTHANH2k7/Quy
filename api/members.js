@@ -1,8 +1,5 @@
 // api/members.js
-const INITIAL_MEMBERS = Array.from({ length: 22 }, (_, i) => ({
-  id: i + 1,
-  name: ""
-}));
+import { INITIAL_MEMBERS } from './_members.js';
 
 export default async function handler(req, res) {
   const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
