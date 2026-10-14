@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q - Quỹ | Bảng Theo Dõi Thu Chi & Đóng Quỹ Tự Động</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-accent: #2563eb;
+      --success: #15803d;
+      --success-light: #dcfce7;
+      --warning: #b45309;
+      --warning-light: #fef3c7;
+      --danger: #b91c1c;
+      --danger-light: #fee2e2;
+      --surface: #ffffff;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --radius: 14px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px 16px 60px;
+    }
+
+    .container { max-width: 920px; margin: 0 auto; }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 60%, #3b82f6 100%);
+      color: white;
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge-parish {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .hero-banner h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-banner p { color: #e0e7ff; font-size: 14px; }
+
+    .banner-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 13px;
+      color: #eff6ff;
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(22, 163, 74, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* RULES INFO BAR */
+    .rules-legend-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .legend-items {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box { position: relative; flex: 1; min-width: 180px; }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .filter-tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 8px;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--primary-accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--primary-accent);
+      color: white;
+      border-color: var(--primary-accent);
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-outline {
+      background: #f8fafc;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-outline:hover { background: #f1f5f9; }
+
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+      min-width: 600px;
+    }
+
+    thead th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background-color 0.15s;
+    }
+
+    tbody tr:hover { background-color: #f8fafc; }
+
+    /* Tier Row Colors */
+    tbody tr.tier-green { background-color: #f0fdf4; }
+    tbody tr.tier-yellow { background-color: #fffbeb; }
+    tbody tr.tier-red { background-color: #fff; }
+
+    td { padding: 12px 16px; vertical-align: middle; }
+
+    .col-center { text-align: center; }
+    .col-right { text-align: right; }
+
+    .stt-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .member-name { font-weight: 700; color: var(--text); }
+
+    .badge-tier {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .badge-tier.tier-green {
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .badge-tier.tier-yellow {
+      background: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid #fde68a;
+    }
+
+    .badge-tier.tier-red {
+      background: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+    }
+
+    .amount-cell {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .btn-qr {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .btn-qr:hover {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      animation: popIn 0.2s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .qr-card-box {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .qr-image {
+      width: 250px;
+      height: 250px;
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      display: block;
+      margin: 0 auto;
+    }
+
+    .qr-bank-details {
+      margin-top: 12px;
+      text-align: left;
+      font-size: 13px;
+      background: white;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .qr-bank-details div { margin-bottom: 4px; }
+
+    .code-memo {
+      background: #eff6ff;
+      color: #1e3a8a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3000;
+    }
+  </style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="container">
+  <!-- BANNER -->
+  <div class="hero-banner">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+      <div class="badge-parish">
+        💰 Q - QUỸ • HỆ THỐNG THU QUỸ TỰ ĐỘNG
+      </div>
+      <div class="live-status">
+        <span class="live-dot"></span> <span id="sync-label">Đồng bộ tự động trực tuyến</span>
+      </div>
+    </div>
+    <h1>BẢNG THEO DÕI THU CHI - Q - QUỸ</h1>
+    <p>Hệ thống tự động hóa gạch nợ qua VietQR & Webhook SePay • Hỗ trợ cộng dồn số tiền không giới hạn</p>
+    
+    <div class="banner-meta">
+      <span>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</span>
+      <span>💳 <strong>STK:</strong> 0123456789</span>
+      <span>👤 <strong>Chủ TK:</strong> CHỦ TÀI KHOẢN</span>
+      <span>⚙️ <strong>Cú pháp:</strong> <code>Q [STT] [TÊN]</code></span>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Sĩ số thành viên</div>
+      <div class="stat-value" id="kpi-total">22</div>
+      <div class="stat-sub">Tổng danh sách</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Đạt mốc chỉ tiêu</div>
+      <div class="stat-value" style="color: var(--success);" id="kpi-green-count">0 / 22</div>
+      <div class="stat-sub" id="kpi-green-desc">Đạt ngưỡng xanh</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Tổng tiền đã thu</div>
+      <div class="stat-value" style="color: var(--primary-accent);" id="kpi-collected">0 đ</div>
+      <div class="stat-sub" id="kpi-contributing">0 bạn đã đóng góp</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-title">Đóng một phần / Chưa đủ</div>
+      <div class="stat-value" style="color: var(--warning);" id="kpi-remaining-count">22</div>
+      <div class="stat-sub">Cần đóng bổ sung</div>
+    </div>
+  </div>
+
+  <!-- RULES LEGEND BAR -->
+  <div class="rules-legend-bar">
+    <div class="legend-items">
+      <span style="font-weight: 700;">Quy tắc mốc màu:</span>
+      <div class="legend-pill" style="color: var(--success);">
+        <span class="legend-dot" style="background: var(--success);"></span>
+        <span id="legend-green-label">🟢 Xanh lá: &ge; 210.000 đ</span>
+      </div>
+      <div class="legend-pill" style="color: var(--warning);">
+        <span class="legend-dot" style="background: var(--warning);"></span>
+        <span id="legend-yellow-label">🟡 Vàng: &ge; 60.000 đ</span>
+      </div>
+      <div class="legend-pill" style="color: var(--danger);">
+        <span class="legend-dot" style="background: var(--danger);"></span>
+        <span id="legend-red-label">🔴 Đỏ: &lt; 60.000 đ</span>
+      </div>
+    </div>
+    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;" onclick="openSettingsModal()">
+      ⚙️ Chỉnh sửa mốc màu
+    </button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" class="search-input" placeholder="Tìm theo tên hoặc STT...">
+    </div>
+
+    <div class="filter-tabs">
+      <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (22)</button>
+      <button class="tab-btn" data-filter="green" id="tab-green">🟢 Đạt mốc (0)</button>
+      <button class="tab-btn" data-filter="yellow" id="tab-yellow">🟡 Một phần (0)</button>
+      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đạt (22)</button>
+    </div>
+
+    <div class="toolbar-actions">
+      <button class="btn btn-primary" id="btn-copy-report">
+        📋 Copy báo cáo Zalo
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-center" style="width: 60px;">STT</th>
+          <th>Họ và tên</th>
+          <th class="col-right" style="width: 160px;">Đã nộp</th>
+          <th class="col-center" style="width: 170px;">Trạng thái</th>
+          <th class="col-center" style="width: 130px;">Mã QR</th>
+        </tr>
+      </thead>
+      <tbody id="member-tbody">
+        <!-- Rendered dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL QR CODE -->
+<div class="modal-backdrop" id="modal-qr">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-qr')">&times;</button>
+    <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;" id="qr-member-name">Quét Mã Nộp Quỹ</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="qr-member-stt">STT: 01</p>
+
+    <div class="qr-card-box">
+      <img id="qr-image-tag" class="qr-image" src="" alt="Mã VietQR Chuyển Khoản">
+    </div>
+
+    <div class="qr-bank-details">
+      <div>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</div>
+      <div>💳 <strong>Số tài khoản:</strong> <code>0123456789</code></div>
+      <div>👤 <strong>Chủ tài khoản:</strong> <strong>CHỦ TÀI KHOẢN</strong></div>
+      <div>💰 <strong>Số tiền đề xuất:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">99.000 đ</strong></div>
+      <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border);">
+        📝 <strong>Nội dung:</strong> <span class="code-memo" id="qr-memo-code"></span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; margin-top: 16px;">
+      <button class="btn btn-primary" style="flex: 1; justify-content: center;" id="btn-copy-memo">
+        📋 Copy cú pháp
+      </button>
+      <button class="btn" style="flex: 1; justify-content: center; background: #f0fdf4; color: #166534; border-color: #bbf7d0;" id="btn-download-qr">
+        📥 Tải ảnh QR
+      </button>
+      <button class="btn" style="justify-content: center;" onclick="closeModal('modal-qr')">
+        Đóng
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CẤU HÌNH MỐC MÀU -->
+<div class="modal-backdrop" id="modal-settings">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-settings')">&times;</button>
+    <h3 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">⚙️ Cấu Hình Mốc Đổi Màu</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+      Tự cài đặt ngưỡng số tiền để bảng theo dõi đổi màu tự động:
+    </p>
+
+    <div class="form-group">
+      <label for="input-green-min">🟢 Mốc Xanh lá (Đạt chỉ tiêu / Vượt mức):</label>
+      <input type="number" id="input-green-min" step="10000" placeholder="Ví dụ: 210000">
+      <small style="color: var(--text-muted); font-size: 12px;">Số tiền nộp từ mức này trở lên sẽ hiển thị màu Xanh lá.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="input-yellow-min">🟡 Mốc Vàng (Đã nộp một phần):</label>
+      <input type="number" id="input-yellow-min" step="10000" placeholder="Ví dụ: 60000">
+      <small style="color: var(--text-muted); font-size: 12px;">Số tiền từ mốc này đến dưới mốc Xanh sẽ hiển thị màu Vàng. Dưới mốc này là Đỏ.</small>
+    </div>
+
+    <div style="display: flex; gap: 8px; margin-top: 20px;">
+      <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="saveColorRules()">
+        💾 Lưu cấu hình
+      </button>
+      <button class="btn btn-outline" onclick="resetColorRules()">
+        Khôi phục mặc định
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg">Đã copy thông tin!</span>
+</div>
+
+<script>
+  const BANK_CONFIG = {
+    bin: '970422',
+    accountNo: '0123456789',
+    accountName: 'CHỦ TÀI KHOẢN',
+    suggestedAmount: 99000
+  };
+
+  const API_ENDPOINT = (window.location.protocol === 'file:' || !window.location.origin.includes('vercel.app'))
+    ? 'https://gioitre-2k6-fund.vercel.app/api/members'
+    : '/api/members';
+
+  const DEFAULT_MEMBERS = Array.from({ length: 22 }, (_, i) => ({
+    id: i + 1,
+    name: "",
+    paidAmount: 0
+  }));
+
+  // Cấu hình quy tắc mốc màu
+  function loadColorRules() {
+    try {
+      const saved = localStorage.getItem('q_quy_color_rules');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.greenMin !== undefined && parsed.yellowMin !== undefined) {
+          return parsed;
+        }
+      }
+    } catch(e) {}
+    return { greenMin: 210000, yellowMin: 60000 };
+  }
+
+  let colorRules = loadColorRules();
+
+  // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
+  let members = (function() {
+    try {
+      const cached = localStorage.getItem('q_quy_members_v3');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length === 22) {
+          return parsed;
+        }
+      }
+    } catch(e) {}
+    return DEFAULT_MEMBERS;
+  })();
+
+  let currentFilter = 'all';
+  let searchQuery = '';
+
+  function removeVietnameseTones(str) {
+    if (!str) return '';
+    return str.normalize('NFD')
+              .replace(/[\u0300-\u036f]/g, '')
+              .replace(/đ/g, 'd').replace(/Đ/g, 'D');
+  }
+
+  function formatMoney(num) {
+    return new Intl.NumberFormat('vi-VN').format(num || 0) + ' đ';
+  }
+
+  function getMemberTier(amount) {
+    const amt = Number(amount || 0);
+    if (amt >= colorRules.greenMin) {
+      return { tier: 'green', class: 'tier-green', label: '✓ Đạt chỉ tiêu' };
+    }
+    if (amt >= colorRules.yellowMin) {
+      return { tier: 'yellow', class: 'tier-yellow', label: '⏳ Một phần' };
+    }
+    return { tier: 'red', class: 'tier-red', label: amt === 0 ? '❌ Chưa nộp' : '⚠️ Chưa đủ mức' };
+  }
+
+  function getMemo(member) {
+    const stt = String(member.id).padStart(2, '0');
+    const nameClean = member.name ? removeVietnameseTones(member.name).toUpperCase().trim() : '';
+    return nameClean ? `Q ${stt} ${nameClean}` : `Q ${stt}`;
+  }
+
+  // CẬP NHẬT GIAO DIỆN QUY TẮC MỐC MÀU
+  function updateRulesLegendUI() {
+    document.getElementById('legend-green-label').textContent = `🟢 Xanh lá: ≥ ${formatMoney(colorRules.greenMin)}`;
+    document.getElementById('legend-yellow-label').textContent = `🟡 Vàng: ≥ ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-red-label').textContent = `🔴 Đỏ: < ${formatMoney(colorRules.yellowMin)}`;
+  }
+
+  // FETCH DỮ LIỆU TỪ SERVER VERCEL API
+  async function fetchServerData() {
+    try {
+      const res = await fetch(API_ENDPOINT);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.members) {
+          // Monotonic Merge: Số tiền nộp chỉ có thể tăng hoặc giữ nguyên
+          const serverAmountMap = new Map();
+          data.members.forEach(m => serverAmountMap.set(m.id, Number(m.paidAmount || 0)));
+
+          members = members.map(m => {
+            const serverAmt = serverAmountMap.get(m.id) || 0;
+            const currentAmt = Number(m.paidAmount || 0);
+            return {
+              ...m,
+              name: m.name || (data.members.find(x => x.id === m.id) || {}).name || '',
+              paidAmount: Math.max(currentAmt, serverAmt)
+            };
+          });
+
+          try {
+            localStorage.setItem('q_quy_members_v3', JSON.stringify(members));
+          } catch(e) {}
+
+          updateKPIs();
+          renderTable();
+          document.getElementById('sync-label').textContent = 'Đồng bộ tự động trực tuyến';
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('API sync warning:', e);
+    }
+  }
+
+  function updateKPIs() {
+    const total = members.length || 22;
+    let greenCount = 0;
+    let yellowCount = 0;
+    let redCount = 0;
+    let totalCollected = 0;
+    let contributingCount = 0;
+
+    members.forEach(m => {
+      const amt = Number(m.paidAmount || 0);
+      totalCollected += amt;
+      if (amt > 0) contributingCount++;
+
+      const t = getMemberTier(amt);
+      if (t.tier === 'green') greenCount++;
+      else if (t.tier === 'yellow') yellowCount++;
+      else redCount++;
+    });
+
+    document.getElementById('kpi-total').textContent = total;
+    document.getElementById('kpi-green-count').textContent = `${greenCount} / ${total}`;
+    document.getElementById('kpi-green-desc').textContent = `${((greenCount / total) * 100).toFixed(1)}% hoàn thành`;
+    document.getElementById('kpi-collected').textContent = formatMoney(totalCollected);
+    document.getElementById('kpi-contributing').textContent = `${contributingCount} bạn đã đóng góp`;
+    document.getElementById('kpi-remaining-count').textContent = `${yellowCount + redCount} bạn`;
+
+    document.getElementById('tab-all').textContent = `Tất cả (${total})`;
+    document.getElementById('tab-green').textContent = `🟢 Đạt mốc (${greenCount})`;
+    document.getElementById('tab-yellow').textContent = `🟡 Một phần (${yellowCount})`;
+    document.getElementById('tab-red').textContent = `🔴 Chưa đạt (${redCount})`;
+
+    if (greenCount === total && total > 0) {
+      triggerConfetti();
+    }
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('member-tbody');
+    tbody.innerHTML = '';
+
+    const filtered = members.filter(m => {
+      const t = getMemberTier(m.paidAmount);
+      if (currentFilter === 'green' && t.tier !== 'green') return false;
+      if (currentFilter === 'yellow' && t.tier !== 'yellow') return false;
+      if (currentFilter === 'red' && t.tier !== 'red') return false;
+
+      if (searchQuery) {
+        const q = removeVietnameseTones(searchQuery.toLowerCase().trim());
+        const nameNoTone = removeVietnameseTones((m.name || ('Thành viên ' + m.id)).toLowerCase());
+        const idMatch = m.id.toString() === searchQuery.trim();
+        return nameNoTone.includes(q) || idMatch;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">Không tìm thấy thành viên phù hợp.</td></tr>`;
+      return;
+    }
+
+    filtered.forEach(m => {
+      const amt = Number(m.paidAmount || 0);
+      const tierInfo = getMemberTier(amt);
+      const tr = document.createElement('tr');
+      tr.className = tierInfo.class;
+
+      const sttFormatted = String(m.id).padStart(2, '0');
+
+      tr.innerHTML = `
+        <td class="col-center"><span class="stt-badge">${sttFormatted}</span></td>
+        <td>
+          <div class="member-name">${m.name || ('Thành viên #' + sttFormatted)}</div>
+        </td>
+        <td class="col-right">
+          <span class="amount-cell" style="color: ${tierInfo.tier === 'green' ? 'var(--success)' : (tierInfo.tier === 'yellow' ? 'var(--warning)' : 'var(--text-muted)')};">
+            ${formatMoney(amt)}
+          </span>
+        </td>
+        <td class="col-center">
+          <span class="badge-tier ${tierInfo.class}">
+            ${tierInfo.label}
+          </span>
+        </td>
+        <td class="col-center">
+          <button class="btn-qr" onclick="openQRModal(${m.id})">
+            📲 Quét QR
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // MODAL QR
+  window.openQRModal = function(id) {
+    const member = members.find(m => m.id === id);
+    if (!member) return;
+
+    const stt = String(member.id).padStart(2, '0');
+    const memo = getMemo(member);
+    const nameClean = removeVietnameseTones(member.name || '').replace(/\s+/g, '_');
+    const amt = Number(member.paidAmount || 0);
+
+    // Đề xuất số tiền nộp: Nếu chưa đạt mốc xanh, gợi ý số còn thiếu để đạt mốc xanh
+    const suggested = amt >= colorRules.greenMin ? BANK_CONFIG.suggestedAmount : Math.max(colorRules.greenMin - amt, 50000);
+
+    document.getElementById('qr-member-name').textContent = member.name || ('Thành viên #' + stt);
+    document.getElementById('qr-member-stt').textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(amt)}`;
+    document.getElementById('qr-suggested-amt').textContent = formatMoney(suggested);
+    document.getElementById('qr-memo-code').textContent = memo;
+
+    const vietqrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.accountNo}-compact2.png?amount=${suggested}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
+    
+    document.getElementById('qr-image-tag').src = vietqrUrl;
+
+    document.getElementById('btn-copy-memo').onclick = function() {
+      navigator.clipboard.writeText(memo).then(() => {
+        showToast(`Đã sao chép: ${memo}`);
+      });
+    };
+
+    document.getElementById('btn-download-qr').onclick = async function() {
+      const btn = document.getElementById('btn-download-qr');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⏳ Đang tải...';
+      try {
+        const response = await fetch(vietqrUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = `QR_MB_${stt}_${nameClean}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+        showToast(`✅ Đã tải ảnh QR của ${member.name || stt}!`);
+      } catch (err) {
+        window.open(vietqrUrl, '_blank');
+        showToast(`Đang mở ảnh QR trong tab mới...`);
+      } finally {
+        btn.innerHTML = originalText;
+      }
+    };
+
+    document.getElementById('modal-qr').classList.add('open');
+  };
+
+  // MODAL CẤU HÌNH MỐC MÀU
+  window.openSettingsModal = function() {
+    document.getElementById('input-green-min').value = colorRules.greenMin;
+    document.getElementById('input-yellow-min').value = colorRules.yellowMin;
+    document.getElementById('modal-settings').classList.add('open');
+  };
+
+  window.saveColorRules = function() {
+    const green = Number(document.getElementById('input-green-min').value) || 210000;
+    const yellow = Number(document.getElementById('input-yellow-min').value) || 60000;
+
+    if (yellow >= green) {
+      alert('Lưu ý: Mốc Vàng phải nhỏ hơn mốc Xanh lá!');
+      return;
+    }
+
+    colorRules = { greenMin: green, yellowMin: yellow };
+    try {
+      localStorage.setItem('q_quy_color_rules', JSON.stringify(colorRules));
+    } catch(e) {}
+
+    updateRulesLegendUI();
+    updateKPIs();
+    renderTable();
+    closeModal('modal-settings');
+    showToast('✅ Đã cập nhật mốc màu thành công!');
+  };
+
+  window.resetColorRules = function() {
+    colorRules = { greenMin: 210000, yellowMin: 60000 };
+    try {
+      localStorage.removeItem('q_quy_color_rules');
+    } catch(e) {}
+    updateRulesLegendUI();
+    updateKPIs();
+    renderTable();
+    closeModal('modal-settings');
+    showToast('🔄 Đã khôi phục mốc màu mặc định');
+  };
+
+  window.closeModal = function(id) {
+    document.getElementById(id).classList.remove('open');
+  };
+
+  // BÁO CÁO ZALO
+  document.getElementById('btn-copy-report').onclick = function() {
+    const total = members.length;
+    let greenCount = 0;
+    let yellowCount = 0;
+    let redCount = 0;
+    let totalCollected = 0;
+
+    members.forEach(m => {
+      const amt = Number(m.paidAmount || 0);
+      totalCollected += amt;
+      const t = getMemberTier(amt);
+      if (t.tier === 'green') greenCount++;
+      else if (t.tier === 'yellow') yellowCount++;
+      else redCount++;
+    });
+
+    let report = `📊 BÁO CÁO TIẾN ĐỘ THU QUỸ: Q - QUỸ\n`;
+    report += `Tổng đã thu: ${formatMoney(totalCollected)}\n`;
+    report += `Tiến độ: 🟢 ${greenCount} bạn đạt mốc | 🟡 ${yellowCount} bạn nộp một phần | 🔴 ${redCount} bạn chưa nộp\n`;
+    report += `------------------------------------\n`;
+
+    members.forEach(m => {
+      const stt = String(m.id).padStart(2, '0');
+      const amt = Number(m.paidAmount || 0);
+      const t = getMemberTier(amt);
+      const icon = t.tier === 'green' ? '🟢' : (t.tier === 'yellow' ? '🟡' : '🔴');
+      report += `${icon} ${stt}. ${m.name || ('Thành viên #' + stt)}: ${formatMoney(amt)}\n`;
+    });
+
+    report += `------------------------------------\n`;
+    report += `STK MBBank: ${BANK_CONFIG.accountNo} (${BANK_CONFIG.accountName})\n`;
+    report += `Cú pháp: Q [STT] [TÊN]`;
+
+    navigator.clipboard.writeText(report).then(() => {
+      showToast('📋 Đã copy báo cáo Zalo vào Clipboard!');
+    });
+  };
+
+  document.getElementById('search-input').addEventListener('input', function(e) {
+    searchQuery = e.target.value;
+    renderTable();
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentFilter = this.dataset.filter;
+      renderTable();
+    });
+  });
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 2800);
+  }
+
+  function triggerConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = [];
+    const colors = ['#2563eb', '#16a34a', '#d97706', '#ec4899', '#8b5cf6'];
+    for (let i = 0; i < 100; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: Math.random() * 4 + 2
+      });
+    }
+
+    let frames = 0;
+    function loop() {
+      if (frames > 160) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.y += p.speed;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+      frames++;
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  // Khởi chạy
+  updateRulesLegendUI();
+  updateKPIs();
+  renderTable();
+
+  // Polling đồng bộ mỗi 3 giây
+  fetchServerData();
+  setInterval(fetchServerData, 3000);
+</script>
+</body>
+</html>
