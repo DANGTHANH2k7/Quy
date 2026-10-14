@@ -957,7 +957,7 @@
     document.getElementById('kpi-green-desc').textContent = `${((greenCount / total) * 100).toFixed(1)}% hoàn thành`;
     document.getElementById('kpi-collected').textContent = formatMoney(totalCollected);
     document.getElementById('kpi-contributing').textContent = `${contributingCount} bạn đã đóng góp`;
-    document.getElementById('kpi-remaining-count').textContent = `${yellowCount + redCount} bạn`;
+    document.getElementById('kpi-remaining-count').textContent = `${redCount} bạn`;
 
     document.getElementById('tab-all').textContent = `Tất cả (${total})`;
     document.getElementById('tab-green').textContent = `🟢 Đạt mốc (${greenCount})`;
