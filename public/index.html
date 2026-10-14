@@ -510,6 +510,34 @@
       font-size: 14px;
     }
 
+    .qr-amount-selector {
+      margin: 12px 0 6px;
+      text-align: left;
+    }
+
+    .btn-amt-pill {
+      border: 1px solid var(--border);
+      background: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .btn-amt-pill:hover {
+      border-color: var(--primary-accent);
+      color: var(--primary-accent);
+    }
+    .btn-amt-pill.active {
+      background: #eff6ff;
+      border-color: #2563eb;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
     .qr-card-box {
       background: #f8fafc;
       border-radius: 12px;
@@ -639,15 +667,15 @@
       <span style="font-weight: 700;">Lưu ý:</span>
       <div class="legend-pill" style="color: var(--success);">
         <span class="legend-dot" style="background: var(--success);"></span>
-        <span id="legend-green-label">🟢 Đi ăn: &ge; 210.000 đ</span>
+        <span id="legend-green-label">Đi ăn: &ge; 210.000 đ</span>
       </div>
       <div class="legend-pill" style="color: var(--warning);">
         <span class="legend-dot" style="background: var(--warning);"></span>
-        <span id="legend-yellow-label">🟡 Tiền quà: &ge; 60.000 đ</span>
+        <span id="legend-yellow-label">Tiền quà: &ge; 60.000 đ</span>
       </div>
       <div class="legend-pill" style="color: var(--danger);">
         <span class="legend-dot" style="background: var(--danger);"></span>
-        <span id="legend-red-label">🔴 Chưa đủ: &lt; 60.000 đ</span>
+        <span id="legend-red-label">Chưa đủ: &lt; 60.000 đ</span>
       </div>
     </div>
   </div>
@@ -708,6 +736,16 @@
     <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;" id="qr-member-name">Quét Mã Nộp Quỹ</h3>
     <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="qr-member-stt">STT: 01</p>
 
+    <!-- BỘ CHỌN SỐ TIỀN QR -->
+    <div class="qr-amount-selector">
+      <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">Chọn số tiền gắn vào QR:</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <button type="button" class="btn-amt-pill active" id="btn-amt-0" onclick="changeQRAmount(0)">Tự nhập trên App</button>
+        <button type="button" class="btn-amt-pill" id="btn-amt-60k" onclick="changeQRAmount(60000)">60.000 đ (Tiền quà)</button>
+        <button type="button" class="btn-amt-pill" id="btn-amt-210k" onclick="changeQRAmount(210000)">210.000 đ (Đi ăn)</button>
+      </div>
+    </div>
+
     <div class="qr-card-box">
       <img id="qr-image-tag" class="qr-image" src="" alt="Mã VietQR Chuyển Khoản">
     </div>
@@ -716,7 +754,7 @@
       <div>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</div>
       <div>💳 <strong>Số tài khoản:</strong> <code>88808112007999</code></div>
       <div>👤 <strong>Chủ tài khoản:</strong> <strong>NGUYEN DANG THANH</strong></div>
-      <div>💰 <strong>Số tiền đề xuất:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">210.000 đ</strong></div>
+      <div>💰 <strong>Số tiền:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">Tự nhập khi chuyển</strong></div>
       <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border);">
         📝 <strong>Nội dung:</strong> <span class="code-memo" id="qr-memo-code"></span>
       </div>
@@ -860,9 +898,9 @@
 
   // CẬP NHẬT GIAO DIỆN QUY TẮC MỐC MÀU
   function updateRulesLegendUI() {
-    document.getElementById('legend-green-label').textContent = `🟢 Đi ăn: ≥ ${formatMoney(colorRules.greenMin)}`;
-    document.getElementById('legend-yellow-label').textContent = `🟡 Tiền quà: ≥ ${formatMoney(colorRules.yellowMin)}`;
-    document.getElementById('legend-red-label').textContent = `🔴 Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-green-label').textContent = `Đi ăn: ≥ ${formatMoney(colorRules.greenMin)}`;
+    document.getElementById('legend-yellow-label').textContent = `Tiền quà: ≥ ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-red-label').textContent = `Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
   }
 
   // FETCH DỮ LIỆU TỪ SERVER VERCEL API
@@ -998,27 +1036,62 @@
     });
   }
 
+  let currentActiveMember = null;
+  let currentSelectedAmount = 0; // 0 = tự nhập khi quét app
+
+  function getVietQRUrl(member, amount) {
+    const memo = getMemo(member);
+    let url = `https://img.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.accountNo}-compact2.png?addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
+    if (amount && amount > 0) {
+      url += `&amount=${amount}`;
+    }
+    return url;
+  }
+
+  window.changeQRAmount = function(amt) {
+    if (!currentActiveMember) return;
+    currentSelectedAmount = amt;
+
+    const btn0 = document.getElementById('btn-amt-0');
+    const btn60k = document.getElementById('btn-amt-60k');
+    const btn210k = document.getElementById('btn-amt-210k');
+    if (btn0) btn0.classList.toggle('active', amt === 0);
+    if (btn60k) btn60k.classList.toggle('active', amt === 60000);
+    if (btn210k) btn210k.classList.toggle('active', amt === 210000);
+
+    const amtEl = document.getElementById('qr-suggested-amt');
+    if (amtEl) {
+      if (amt === 0) {
+        amtEl.textContent = 'Tự nhập trên App Ngân hàng';
+      } else {
+        amtEl.textContent = formatMoney(amt);
+      }
+    }
+
+    const url = getVietQRUrl(currentActiveMember, amt);
+    const imgEl = document.getElementById('qr-image-tag');
+    if (imgEl) imgEl.src = url;
+  };
+
   // MODAL QR
   window.openQRModal = function(id) {
     const member = members.find(m => m.id === id);
     if (!member) return;
+
+    currentActiveMember = member;
+    currentSelectedAmount = 0;
 
     const stt = String(member.id).padStart(2, '0');
     const memo = getMemo(member);
     const nameClean = removeVietnameseTones(member.name || '').replace(/\s+/g, '_');
     const amt = Number(member.paidAmount || 0);
 
-    // Đề xuất số tiền nộp: Nếu chưa đạt mốc xanh, gợi ý số còn thiếu để đạt mốc xanh
-    const suggested = amt >= colorRules.greenMin ? BANK_CONFIG.suggestedAmount : Math.max(colorRules.greenMin - amt, 50000);
-
     document.getElementById('qr-member-name').textContent = member.name || ('Thành viên #' + stt);
     document.getElementById('qr-member-stt').textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(amt)}`;
-    document.getElementById('qr-suggested-amt').textContent = formatMoney(suggested);
     document.getElementById('qr-memo-code').textContent = memo;
 
-    const vietqrUrl = `https://img.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.accountNo}-compact2.png?amount=${suggested}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
-    
-    document.getElementById('qr-image-tag').src = vietqrUrl;
+    // Mặc định: KHÔNG gán cứng 210k (Tự nhập trên App)
+    changeQRAmount(0);
 
     document.getElementById('btn-copy-memo').onclick = function() {
       navigator.clipboard.writeText(memo).then(() => {
@@ -1030,6 +1103,7 @@
       const btn = document.getElementById('btn-download-qr');
       const originalText = btn.innerHTML;
       btn.innerHTML = '⏳ Đang tải...';
+      const vietqrUrl = getVietQRUrl(member, currentSelectedAmount);
       try {
         const response = await fetch(vietqrUrl);
         const blob = await response.blob();
