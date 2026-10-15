@@ -739,10 +739,14 @@
     <!-- BỘ CHỌN SỐ TIỀN QR -->
     <div class="qr-amount-selector">
       <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">Chọn số tiền gắn vào QR:</div>
-      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-        <button type="button" class="btn-amt-pill active" id="btn-amt-0" onclick="changeQRAmount(0)">Tự nhập trên App</button>
-        <button type="button" class="btn-amt-pill" id="btn-amt-60k" onclick="changeQRAmount(60000)">60.000 đ (Tiền quà)</button>
-        <button type="button" class="btn-amt-pill" id="btn-amt-210k" onclick="changeQRAmount(210000)">210.000 đ (Tiền quà + Đi ăn)</button>
+      <div id="qr-quick-buttons" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+        <!-- Các nút gợi ý thông minh tự sinh theo số tiền còn thiếu -->
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); white-space: nowrap;">Hoặc nhập:</span>
+        <input type="number" id="input-custom-qr-amount" step="10000" placeholder="Số tiền tùy ý (VD: 150000)" 
+               style="flex: 1; padding: 6px 10px; font-size: 13px; border: 1px solid var(--border); border-radius: 6px; outline: none;"
+               oninput="onCustomAmountInput(this.value)">
       </div>
     </div>
 
@@ -1041,21 +1045,30 @@
     return url;
   }
 
-  window.changeQRAmount = function(amt) {
+  window.onCustomAmountInput = function(val) {
+    const amt = Number(val) || 0;
+    changeQRAmount(amt, true);
+  };
+
+  window.changeQRAmount = function(amt, fromInput = false) {
     if (!currentActiveMember) return;
     currentSelectedAmount = amt;
 
-    const btn0 = document.getElementById('btn-amt-0');
-    const btn60k = document.getElementById('btn-amt-60k');
-    const btn210k = document.getElementById('btn-amt-210k');
-    if (btn0) btn0.classList.toggle('active', amt === 0);
-    if (btn60k) btn60k.classList.toggle('active', amt === 60000);
-    if (btn210k) btn210k.classList.toggle('active', amt === 210000);
+    // Cập nhật nút active
+    document.querySelectorAll('.btn-amt-pill').forEach(btn => {
+      const btnAmt = Number(btn.dataset.amount || 0);
+      btn.classList.toggle('active', !fromInput && btnAmt === amt);
+    });
+
+    if (!fromInput) {
+      const input = document.getElementById('input-custom-qr-amount');
+      if (input) input.value = amt > 0 ? amt : '';
+    }
 
     const amtEl = document.getElementById('qr-suggested-amt');
     if (amtEl) {
       if (amt === 0) {
-        amtEl.textContent = 'Tự nhập trên App Ngân hàng';
+        amtEl.textContent = 'Người chuyển tự nhập trên App';
       } else {
         amtEl.textContent = formatMoney(amt);
       }
@@ -1083,7 +1096,50 @@
     document.getElementById('qr-member-stt').textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(amt)}`;
     document.getElementById('qr-memo-code').textContent = memo;
 
-    // Mặc định: KHÔNG gán cứng 210k (Tự nhập trên App)
+    // Sinh các nút gợi ý thông minh dựa trên số tiền còn thiếu của bạn này
+    const buttonsContainer = document.getElementById('qr-quick-buttons');
+    if (buttonsContainer) {
+      buttonsContainer.innerHTML = '';
+
+      const remainingToGreen = Math.max(0, colorRules.greenMin - amt);
+      const remainingToYellow = Math.max(0, colorRules.yellowMin - amt);
+
+      // 1. Nút tự nhập trên app (mặc định)
+      const btnFree = document.createElement('button');
+      btnFree.type = 'button';
+      btnFree.className = 'btn-amt-pill active';
+      btnFree.dataset.amount = '0';
+      btnFree.textContent = 'Tự nhập trên App';
+      btnFree.onclick = () => changeQRAmount(0);
+      buttonsContainer.appendChild(btnFree);
+
+      // 2. Nút đi ăn (nếu chưa đạt mốc 210k)
+      if (remainingToGreen > 0) {
+        const btnGreen = document.createElement('button');
+        btnGreen.type = 'button';
+        btnGreen.className = 'btn-amt-pill';
+        btnGreen.dataset.amount = String(remainingToGreen);
+        btnGreen.textContent = amt > 0 ? `${formatMoney(remainingToGreen)} (Còn thiếu để Đi ăn)` : `${formatMoney(remainingToGreen)} (Tiền quà + Đi ăn)`;
+        btnGreen.onclick = () => changeQRAmount(remainingToGreen);
+        buttonsContainer.appendChild(btnGreen);
+      }
+
+      // 3. Nút tiền quà (nếu chưa đạt mốc 60k)
+      if (remainingToYellow > 0) {
+        const btnYellow = document.createElement('button');
+        btnYellow.type = 'button';
+        btnYellow.className = 'btn-amt-pill';
+        btnYellow.dataset.amount = String(remainingToYellow);
+        btnYellow.textContent = `${formatMoney(remainingToYellow)} (Tiền quà)`;
+        btnYellow.onclick = () => changeQRAmount(remainingToYellow);
+        buttonsContainer.appendChild(btnYellow);
+      }
+    }
+
+    const inputCustom = document.getElementById('input-custom-qr-amount');
+    if (inputCustom) inputCustom.value = '';
+
+    // Khởi tạo mặc định: Không gán cứng số tiền
     changeQRAmount(0);
 
     document.getElementById('btn-copy-memo').onclick = function() {
