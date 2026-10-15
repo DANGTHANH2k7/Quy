@@ -1,8 +1,8 @@
 // api/sepay-webhook.js
 import crypto from 'crypto';
 import { INITIAL_MEMBERS } from './_members.js';
+import { getFundData, getSlugByPrefix, redisCommand } from './_db.js';
 
-// Bộ nhớ đệm fallback khi chưa cấu hình Redis
 let fallbackBalances = new Map();
 let fallbackProcessedTxs = new Set();
 
@@ -21,48 +21,42 @@ function safeCompare(a, b) {
   return crypto.timingSafeEqual(bufA, bufB);
 }
 
-function matchMember(content) {
-  if (!content) return null;
-  const clean = removeVietnameseTones(content.toLowerCase()).trim();
+// Hàm nhận diện thành viên cho một danh sách thành viên cụ thể
+function matchMemberInList(cleanContent, membersList, prefix) {
+  if (!cleanContent || !Array.isArray(membersList) || membersList.length === 0) return null;
 
-  // TẦNG 1: ƯU TIÊN SỐ 1 TUYỆT ĐỐI - Khớp chính xác theo STT kèm tiền tố quỹ
-  // Bắt các định dạng: Q30, Q 30, Q-30, Q_30, QUY 30, 2K6 30
-  const sttMatch = clean.match(/(?:^|\s|[._-])(?:q|quy|2k6)[\s._-]*0*(\d{1,2})(?:$|\s|[._-])/i);
+  // 1. Khớp theo [PREFIX] [STT] (Ví dụ: Q 30, Q30, QL12 05, A12 01)
+  const escapedPrefix = (prefix || 'Q').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const sttRegex = new RegExp(`(?:^|\\s|[._-])${escapedPrefix}[\\s._-]*0*(\\d{1,3})(?:$|\\s|[._-])`, 'i');
+  const sttMatch = cleanContent.match(sttRegex);
   if (sttMatch && sttMatch[1]) {
     const parsedId = parseInt(sttMatch[1], 10);
-    const member = INITIAL_MEMBERS.find(m => m.id === parsedId);
-    if (member) {
-      return member.id;
-    }
+    const m = membersList.find(x => x.id === parsedId);
+    if (m) return m.id;
   }
 
-  // TẦNG 2: Khớp theo Họ và tên đầy đủ (Không dấu)
-  // Ưu tiên tên có độ dài dài hơn trước để tránh trùng lặp
-  const sortedByNameLength = [...INITIAL_MEMBERS]
+  // 2. Khớp theo Họ và tên đầy đủ
+  const sortedByName = [...membersList]
     .filter(m => m.name && m.name.trim())
     .sort((a, b) => b.name.length - a.name.length);
 
-  for (const m of sortedByNameLength) {
+  for (const m of sortedByName) {
     const fullName = removeVietnameseTones(m.name.toLowerCase()).trim();
-    if (fullName && clean.includes(fullName)) {
+    if (fullName && cleanContent.includes(fullName)) {
       return m.id;
     }
   }
 
-  // TẦNG 3: Khớp theo Tên gọi (Last Name) ĐỘC LẬP kèm tiền tố quỹ
-  // Chỉ kiểm tra khi có tiền tố quỹ (q, quy, 2k6) VÀ tên phải là từ đứng độc lập (Word boundary)
-  // Chống lỗi nghiêm trọng: từ "an" bị dính vào trong chữ "dang" hay "thanh"
-  const hasFundPrefix = /(?:^|\s|[._-])(?:q|quy|2k6)(?:$|\s|[._-])/i.test(clean);
-  if (hasFundPrefix) {
-    for (const m of INITIAL_MEMBERS) {
+  // 3. Khớp theo Tên gọi (Last Name) độc lập kèm tiền tố quỹ
+  const hasPrefix = new RegExp(`(?:^|\\s|[._-])${escapedPrefix}(?:$|\\s|[._-])`, 'i').test(cleanContent);
+  if (hasPrefix) {
+    for (const m of membersList) {
       if (!m.name) continue;
-      const nameParts = removeVietnameseTones(m.name.toLowerCase()).trim().split(/\s+/);
-      const lastName = nameParts[nameParts.length - 1];
+      const parts = removeVietnameseTones(m.name.toLowerCase()).trim().split(/\s+/);
+      const lastName = parts[parts.length - 1];
       if (!lastName) continue;
-
-      // Bắt buộc lastName phải đứng độc lập giữa các khoảng trắng hoặc dấu phân cách
       const wordRegex = new RegExp(`(?:^|\\s|[._-])${lastName}(?:$|\\s|[._-])`, 'i');
-      if (wordRegex.test(clean)) {
+      if (wordRegex.test(cleanContent)) {
         return m.id;
       }
     }
@@ -72,8 +66,6 @@ function matchMember(content) {
 }
 
 export default async function handler(req, res) {
-  const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
-  const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
   const SEPAY_API_KEY = process.env.SEPAY_API_KEY;
 
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -84,11 +76,10 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Hỗ trợ kiểm tra endpoint qua trình duyệt hoặc ping test
   if (req.method === 'GET') {
     return res.status(200).json({
       status: 'active',
-      message: 'SePay Webhook Endpoint đang hoạt động sẵn sàng tiếp nhận POST request'
+      message: 'SePay Webhook Multi-Tenant Endpoint sẵn sàng tiếp nhận POST request'
     });
   }
 
@@ -96,81 +87,94 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  // 1. BẢO MẬT: Kiểm tra Authorization Header (Chống Timing Attack)
-  if (SEPAY_API_KEY) {
-    const authHeader = req.headers['authorization'] || '';
-    const match = authHeader.match(/^(?:Apikey|Bearer)\s+(.+)$/i);
-    const providedKey = match ? match[1].trim() : authHeader.trim();
-
-    if (!safeCompare(providedKey, SEPAY_API_KEY.trim())) {
-      console.warn('Webhook Unauthorized: Header Authorization không hợp lệ');
-      return res.status(401).json({ success: false, message: 'Unauthorized' });
-    }
-  }
-
   try {
     const body = req.body || {};
     console.log('SePay Webhook Received:', JSON.stringify(body));
 
-    const content = body.content || body.transaction_content || body.description || '';
+    const content = String(body.content || body.transaction_content || body.description || '');
     const amount = Number(body.transferAmount || body.amount_in || body.amount || 0);
     const transactionId = String(body.id || body.referenceCode || body.reference_number || '').trim();
 
-    // 2. BẢO MẬT: Chống Replay Attack (Kiểm tra mã giao dịch duy nhất)
-    if (transactionId) {
-      if (REDIS_URL && REDIS_TOKEN) {
-        try {
-          const saddRes = await fetch(`${REDIS_URL}/sadd/processed_transactions/${encodeURIComponent(transactionId)}`, {
-            headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
-          });
-          const saddData = await saddRes.json();
-          // Nếu result === 0: Mã giao dịch này đã được xử lý trước đó
-          if (saddData && saddData.result === 0) {
-            console.warn(`[Replay Attack Blocked] Mã giao dịch ${transactionId} đã được xử lý trước đó.`);
-            return res.status(200).json({
-              success: true,
-              message: 'Giao dịch đã được ghi nhận trước đó (Idempotent)',
-              transactionId
-            });
-          }
-        } catch (redisErr) {
-          console.warn('Lỗi kiểm tra transaction trên Redis:', redisErr);
+    // 1. ĐỊNH TUYẾN ĐA QUỸ (Hỗ trợ cả Query Param và Prefix)
+    // Ưu tiên 1: Đọc từ query URL ?slug=... hoặc ?fund=... (Phương án B: Mỗi chủ quỹ cấu hình webhook URL riêng)
+    let targetSlug = req.query.slug || req.query.fund || null;
+    let targetPrefix = null;
+
+    const cleanContent = removeVietnameseTones(content.toLowerCase()).trim();
+
+    // Ưu tiên 2: Nếu không có query, tự động nhận diện từ tiền tố trong nội dung
+    if (!targetSlug) {
+      const tokens = cleanContent.split(/[\s._-]+/).filter(Boolean);
+      for (const token of tokens.slice(0, 4)) {
+        const upperToken = token.toUpperCase();
+        const matchedSlug = await getSlugByPrefix(upperToken);
+        if (matchedSlug) {
+          targetSlug = matchedSlug;
+          targetPrefix = upperToken;
+          break;
         }
-      } else {
-        if (fallbackProcessedTxs.has(transactionId)) {
-          return res.status(200).json({
-            success: true,
-            message: 'Giao dịch đã được ghi nhận trước đó (Idempotent)'
-          });
-        }
-        fallbackProcessedTxs.add(transactionId);
       }
     }
 
-    // 3. KHỚP THÀNH VIÊN & CỘNG DỒN NGUYÊN TỬ VÀO REDIS HASH
-    const matchedId = matchMember(content);
+    if (!targetSlug) targetSlug = 'default';
+
+    // 2. LẤY DỮ LIỆU CỦA QUỸ THỤ HƯỞNG
+    const targetFund = await getFundData(targetSlug);
+    if (!targetFund) {
+      console.warn(`[Webhook Warning] Không tìm thấy quỹ: ${targetSlug}`);
+      return res.status(404).json({ success: false, message: 'Fund not found' });
+    }
+
+    // 3. XÁC THỰC API KEY RIÊNG CỦA CHỦ QUỸ (PHƯƠNG ÁN B)
+    // Nếu chủ quỹ có cấu hình sepayApiKey riêng -> Dùng key của chủ quỹ đó
+    // Nếu không -> Dùng SEPAY_API_KEY mặc định của hệ thống
+    const expectedApiKey = (targetFund.sepayApiKey && targetFund.sepayApiKey.trim()) || SEPAY_API_KEY;
+    if (expectedApiKey) {
+      const authHeader = req.headers['authorization'] || '';
+      const match = authHeader.match(/^(?:Apikey|Bearer)\s+(.+)$/i);
+      const providedKey = match ? match[1].trim() : authHeader.trim();
+
+      if (!safeCompare(providedKey, expectedApiKey.trim())) {
+        console.warn(`[Webhook Unauthorized] Sai API Key cho quỹ [${targetSlug}]`);
+        return res.status(401).json({ success: false, message: 'Unauthorized: Invalid SePay API Key' });
+      }
+    }
+
+    // 4. Chống Replay Attack (Mã giao dịch chỉ xử lý 1 lần)
+    if (transactionId) {
+      const saddRes = await redisCommand('SADD', 'processed_transactions', transactionId);
+      if (saddRes === 0) {
+        console.warn(`[Replay Attack Blocked] Giao dịch ${transactionId} đã được xử lý trước đó.`);
+        return res.status(200).json({
+          success: true,
+          message: 'Giao dịch đã được ghi nhận trước đó (Idempotent)',
+          transactionId
+        });
+      }
+    }
+
+    // 5. LẤY DANH SÁCH THÀNH VIÊN VÀ KHỚP ID
+    const membersList = (targetFund && targetFund.members) ? targetFund.members : INITIAL_MEMBERS;
+    const effectivePrefix = targetFund.prefix || targetPrefix || 'Q';
+
+    const matchedId = matchMemberInList(cleanContent, membersList, effectivePrefix);
 
     if (matchedId && amount > 0) {
-      if (REDIS_URL && REDIS_TOKEN) {
-        // Lệnh HINCRBY member_balances [ID] [AMOUNT] (Nguyên tử O(1))
-        await fetch(`${REDIS_URL}/hincrby/member_balances/${matchedId}/${amount}`, {
-          headers: { Authorization: `Bearer ${REDIS_TOKEN}` }
-        });
-        console.log(`[Q - Quỹ] Cập nhật thành viên #${matchedId} +${amount} VNĐ`);
-      } else {
-        const cur = fallbackBalances.get(matchedId) || 0;
-        fallbackBalances.set(matchedId, cur + amount);
-        console.log(`[Q - Quỹ Fallback] Cập nhật thành viên #${matchedId} +${amount} VNĐ`);
-      }
+      const balanceKey = targetSlug === 'default' ? 'member_balances' : `fund:${targetSlug}:balances`;
+      await redisCommand('HINCRBY', balanceKey, String(matchedId), String(amount));
+      console.log(`[Webhook Multi-tenant] Quỹ [${targetSlug}] -> Thành viên #${matchedId} +${amount} đ`);
+    } else {
+      console.warn(`[Webhook Warning] Không tìm thấy thành viên phù hợp trong nội dung: "${content}"`);
     }
 
-    // Trả về HTTP 200 cho SePay
     return res.status(200).json({
       success: true,
+      fundSlug: targetSlug,
       matchedMemberId: matchedId || null,
       amountAdded: amount,
       transactionId: transactionId || null
     });
+
   } catch (err) {
     console.error('Webhook processing error:', err);
     return res.status(200).json({ success: true, error: err.message });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Q - Quỹ | Bảng Theo Dõi Thu Chi & Đóng Quỹ Tự Động</title>
+  <title>Q - Quỹ | Nền Tảng Theo Dõi Thu Chi & Đóng Quỹ Tự Động</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,16 +35,103 @@
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      padding: 24px 16px 60px;
+      padding: 16px 16px 60px;
     }
 
-    .container { max-width: 920px; margin: 0 auto; }
+    .container { max-width: 960px; margin: 0 auto; }
 
+    /* TOP NAV BAR */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 12px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-create-fund {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-create-fund:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+    }
+
+    .admin-pill {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* HERO BANNER */
     .hero-banner {
       background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 60%, #3b82f6 100%);
       color: white;
       border-radius: var(--radius);
-      padding: 28px 24px;
+      padding: 24px 22px;
       margin-bottom: 20px;
       box-shadow: var(--shadow-lg);
       position: relative;
@@ -62,11 +149,11 @@
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .hero-banner h1 {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       margin-bottom: 6px;
       letter-spacing: -0.5px;
@@ -112,6 +199,7 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
+    /* STATS GRID */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -182,7 +270,7 @@
       border-radius: 50%;
     }
 
-    /* NOTE CARD (Ô GHI CHÚ) */
+    /* NOTE CARD */
     .note-card {
       background: #fffbeb;
       border: 1px solid #fde68a;
@@ -195,23 +283,9 @@
       gap: 10px;
     }
 
-    .note-icon {
-      font-size: 18px;
-      line-height: 1.2;
-    }
-
-    .note-body {
-      flex: 1;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #92400e;
-    }
-
-    .note-header {
-      font-weight: 700;
-      margin-bottom: 2px;
-      color: #78350f;
-    }
+    .note-icon { font-size: 18px; line-height: 1.2; }
+    .note-body { flex: 1; font-size: 13px; line-height: 1.5; color: #92400e; }
+    .note-header { font-weight: 700; margin-bottom: 2px; color: #78350f; }
 
     .member-note-badge {
       display: inline-block;
@@ -225,6 +299,7 @@
       border: 1px solid #fde68a;
     }
 
+    /* TOOLBAR */
     .toolbar {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -248,12 +323,12 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       outline: none;
-      font-family: inherit;
+      transition: border-color 0.15s;
     }
 
     .search-input:focus {
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
     }
 
     .search-icon {
@@ -262,17 +337,15 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 14px;
       pointer-events: none;
     }
 
-    .filter-tabs {
+    .tab-filters {
       display: flex;
-      background: #f1f5f9;
-      padding: 4px;
-      border-radius: 8px;
       gap: 4px;
-      flex-wrap: wrap;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 8px;
     }
 
     .tab-btn {
@@ -281,94 +354,44 @@
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.15s;
-      font-family: inherit;
     }
 
     .tab-btn.active {
       background: var(--surface);
-      color: var(--primary-accent);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-
-    .toolbar-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--surface);
       color: var(--text);
-      font-family: inherit;
-      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
     }
 
-    .btn-primary {
-      background: var(--primary-accent);
-      color: white;
-      border-color: var(--primary-accent);
-    }
-    .btn-primary:hover { background: #1d4ed8; }
-
-    .btn-outline {
-      background: #f8fafc;
-      color: var(--text);
-      border-color: var(--border);
-    }
-    .btn-outline:hover { background: #f1f5f9; }
-
+    /* TABLE */
     .table-container {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      overflow-x: auto;
-      box-shadow: var(--shadow);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      text-align: left;
-      min-width: 600px;
-    }
+    .table-scroll { overflow-x: auto; }
 
-    thead th {
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th {
       background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-      font-size: 12px;
+      padding: 12px 16px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
       border-bottom: 1px solid var(--border);
     }
 
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background-color 0.15s;
-    }
-
+    td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover { background-color: #f8fafc; }
-
-    /* Tier Row Colors */
-    tbody tr.tier-green { background-color: #f0fdf4; }
-    tbody tr.tier-yellow { background-color: #fffbeb; }
-    tbody tr.tier-red { background-color: #fff; }
-
-    td { padding: 12px 16px; vertical-align: middle; }
 
     .col-center { text-align: center; }
     .col-right { text-align: right; }
@@ -379,77 +402,94 @@
       justify-content: center;
       width: 28px;
       height: 28px;
-      background: #f1f5f9;
-      border-radius: 6px;
+      background: var(--bg);
+      border-radius: 8px;
       font-weight: 700;
       font-size: 12px;
-      color: #475569;
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
-    .member-name { font-weight: 700; color: var(--text); }
-
-    .badge-tier {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      user-select: none;
-    }
-
-    .badge-tier.tier-green {
-      background: var(--success-light);
-      color: var(--success);
-      border: 1px solid #bbf7d0;
-    }
-
-    .badge-tier.tier-yellow {
-      background: var(--warning-light);
-      color: var(--warning);
-      border: 1px solid #fde68a;
-    }
-
-    .badge-tier.tier-red {
-      background: var(--danger-light);
-      color: var(--danger);
-      border: 1px solid #fca5a5;
-    }
+    .member-name { font-weight: 700; color: var(--text); font-size: 14px; }
 
     .amount-cell {
+      font-family: 'Plus Jakarta Sans', monospace;
       font-weight: 800;
       font-size: 14px;
     }
 
-    .btn-qr {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
+    .badge-tier {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      transition: all 0.15s;
-      font-family: inherit;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .btn-qr:hover {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
-      transform: translateY(-1px);
+    .tier-green .badge-tier { background: var(--success-light); color: var(--success); }
+    .tier-yellow .badge-tier { background: var(--warning-light); color: var(--warning); }
+    .tier-red .badge-tier { background: var(--danger-light); color: var(--danger); }
+
+    /* ACTION BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      transition: all 0.15s;
+    }
+
+    .btn:hover { background: #f1f5f9; }
+    .btn-primary { background: var(--primary-accent); color: white; border-color: var(--primary-accent); }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .btn-qr {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-qr:hover { background: #dbeafe; }
+
+    .btn-amt-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-amt-pill:hover { background: #f1f5f9; }
+    .btn-amt-pill.active {
+      background: #eff6ff;
+      color: var(--primary-accent);
+      border-color: var(--primary-accent);
+      font-weight: 700;
     }
 
     /* MODAL */
     .modal-backdrop {
       position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(4px);
       display: none;
       align-items: center;
@@ -461,39 +501,80 @@
     .modal-backdrop.open { display: flex; }
 
     .modal-content {
-      background: white;
-      border-radius: 16px;
-      max-width: 440px;
+      background: var(--surface);
+      border-radius: var(--radius);
       width: 100%;
+      max-width: 520px;
       padding: 24px;
       box-shadow: var(--shadow-lg);
       position: relative;
-      animation: popIn 0.2s ease-out;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
+      top: 16px; right: 16px;
       border: none;
+      background: transparent;
       font-size: 22px;
-      cursor: pointer;
       color: var(--text-muted);
+      cursor: pointer;
       line-height: 1;
     }
 
-    .form-group {
-      margin-bottom: 14px;
+    .qr-card-box {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin: 16px 0 12px;
+    }
+
+    .qr-image { width: 230px; height: 230px; object-fit: contain; }
+
+    .qr-bank-details {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      border: 1px solid var(--border);
       text-align: left;
     }
 
-    .form-group label {
+    .code-memo {
+      background: #eff6ff;
+      color: var(--primary-accent);
+      font-family: monospace;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* SECURITY WARNING BANNER IN QR MODAL */
+    .qr-security-warning {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #92400e;
+      line-height: 1.4;
+      margin-top: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* FORM STYLES */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
       display: block;
       font-size: 13px;
       font-weight: 700;
@@ -501,111 +582,63 @@
       color: var(--text);
     }
 
-    .form-group input {
+    .form-label small {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .form-input, .form-select, .form-textarea {
       width: 100%;
-      padding: 8px 12px;
+      padding: 9px 12px;
+      font-size: 14px;
       border: 1px solid var(--border);
       border-radius: 8px;
+      outline: none;
       font-family: inherit;
-      font-size: 14px;
+      background: var(--surface);
     }
 
-    .qr-amount-selector {
-      margin: 12px 0 6px;
-      text-align: left;
-    }
-
-    .btn-amt-pill {
-      border: 1px solid var(--border);
-      background: white;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      color: var(--text);
-      transition: all 0.15s;
-    }
-    .btn-amt-pill:hover {
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
       border-color: var(--primary-accent);
-      color: var(--primary-accent);
-    }
-    .btn-amt-pill.active {
-      background: #eff6ff;
-      border-color: #2563eb;
-      color: #1d4ed8;
-      font-weight: 700;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
     }
 
-    .qr-card-box {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 14px;
-      margin: 14px 0;
-      border: 1px solid var(--border);
-      text-align: center;
+    .form-row {
+      display: flex;
+      gap: 12px;
     }
 
-    .qr-image {
-      width: 250px;
-      height: 250px;
-      max-width: 100%;
-      border-radius: 8px;
-      box-shadow: var(--shadow-sm);
-      display: block;
-      margin: 0 auto;
-    }
+    .form-row .form-group { flex: 1; }
 
-    .qr-bank-details {
-      margin-top: 12px;
-      text-align: left;
-      font-size: 13px;
-      background: white;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-
-    .qr-bank-details div { margin-bottom: 4px; }
-
-    .code-memo {
-      background: #eff6ff;
-      color: #1e3a8a;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 700;
-      font-family: monospace;
-      font-size: 14px;
-    }
-
+    /* TOAST */
     .toast {
       position: fixed;
       bottom: 24px;
-      right: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
       background: #0f172a;
       color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
       font-weight: 600;
       box-shadow: var(--shadow-lg);
       display: flex;
       align-items: center;
-      gap: 10px;
-      z-index: 2000;
-      transform: translateY(100px);
+      gap: 8px;
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+      pointer-events: none;
     }
 
-    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
     #confetti-canvas {
       position: fixed;
-      inset: 0;
+      top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 3000;
+      z-index: 1500;
     }
   </style>
 </head>
@@ -613,78 +646,92 @@
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container">
-  <!-- BANNER -->
-  <div class="hero-banner">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
-      <div class="badge-parish">
-        💰 Q - QUỸ • HỆ THỐNG THU QUỸ TỰ ĐỘNG
+  <!-- TOP NAV BAR -->
+  <header class="top-nav">
+    <a href="/" class="brand" id="brand-link">
+      <div class="brand-logo">Q</div>
+      <div>
+        <div class="brand-title" id="nav-app-name">Q - Quỹ</div>
+        <div class="brand-subtitle" id="nav-fund-desc">Theo dõi đóng quỹ minh bạch & tự động</div>
       </div>
-      <div class="live-status">
-        <span class="live-dot"></span> <span id="sync-label">Đồng bộ tự động trực tuyến</span>
-      </div>
+    </a>
+    <div class="top-actions">
+      <button class="admin-pill" id="btn-admin-manage" style="display: none;" onclick="openAdminModal()">
+        👑 Quản Trị Quỹ
+      </button>
+      <button class="btn-create-fund" onclick="openCreateFundModal()">
+        <span>+</span> Tạo Quỹ Mới
+      </button>
     </div>
-    <h1>CẬP NHẬT Q - QUỸ</h1>
-    <p>VietQR & SePay • Nhận Donate</p>
+  </header>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner">
+    <div class="badge-parish" id="hero-badge">QUỸ TẬP THỂ</div>
+    <h1 id="hero-title">Đang tải dữ liệu quỹ...</h1>
+    <p id="hero-desc">Theo dõi tiến độ đóng góp và quét VietQR tự động qua SePay</p>
     
     <div class="banner-meta">
-      <span>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</span>
-      <span>💳 <strong>STK:</strong> 88808112007999</span>
-      <span>👤 <strong>Chủ TK:</strong> NGUYEN DANG THANH</span>
-      <span>⚙️ <strong>Cú pháp:</strong> <code>Q [STT] [TÊN]</code></span>
+      <div class="live-status">
+        <span class="live-dot"></span>
+        <span id="sync-label">Đồng bộ trực tuyến</span>
+      </div>
+      <div>🏦 STK: <strong id="hero-account-no">...</strong> (<span id="hero-bank-name">...</span>)</div>
+      <div>👤 Chủ quỹ: <strong id="hero-account-name">...</strong></div>
+      <div>🔑 Cú pháp: <code id="hero-memo-syntax" style="background: rgba(255,255,255,0.25); padding: 2px 6px; border-radius: 4px; font-weight: 700;">...</code></div>
     </div>
   </div>
 
-  <!-- KPI CARDS -->
+  <!-- STATS KPI GRID -->
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-title">Sĩ số thành viên</div>
-      <div class="stat-value" id="kpi-total">31</div>
-      <div class="stat-sub">Tổng danh sách</div>
+      <div class="stat-title">Thành viên</div>
+      <div class="stat-value" id="kpi-total">0</div>
+      <div class="stat-sub">Tổng thành viên trong quỹ</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-title">Đạt mốc chỉ tiêu</div>
-      <div class="stat-value" style="color: var(--success);" id="kpi-green-count">0 / 31</div>
-      <div class="stat-sub" id="kpi-green-desc">Đã đủ</div>
+      <div class="stat-title">Đã đạt mốc</div>
+      <div class="stat-value" style="color: var(--success);" id="kpi-green-count">0 / 0</div>
+      <div class="stat-sub" id="kpi-green-desc">0% hoàn thành</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-title">Tổng tiền đã thu</div>
+      <div class="stat-title">Tổng đã thu</div>
       <div class="stat-value" style="color: var(--primary-accent);" id="kpi-collected">0 đ</div>
       <div class="stat-sub" id="kpi-contributing">0 bạn đã đóng góp</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-title">Đóng Chưa đủ</div>
-      <div class="stat-value" style="color: var(--warning);" id="kpi-remaining-count">31</div>
-      <div class="stat-sub">Cần đóng bổ sung</div>
+      <div class="stat-title">Chưa hoàn thành</div>
+      <div class="stat-value" style="color: var(--danger);" id="kpi-remaining-count">0 bạn</div>
+      <div class="stat-sub">Cần nhắc nhở hoàn thành</div>
     </div>
   </div>
 
   <!-- RULES LEGEND BAR -->
   <div class="rules-legend-bar">
     <div class="legend-items">
-      <span style="font-weight: 700;">Lưu ý:</span>
-      <div class="legend-pill" style="color: var(--success);">
-        <span class="legend-dot" style="background: var(--success);"></span>
-        <span id="legend-green-label">Đi ăn: &ge; 210.000 đ</span>
+      <div class="legend-pill">
+        <span class="legend-dot" style="background-color: var(--success);"></span>
+        <span id="legend-green-label">Đạt mốc: ≥ 210.000 đ</span>
       </div>
-      <div class="legend-pill" style="color: var(--warning);">
-        <span class="legend-dot" style="background: var(--warning);"></span>
-        <span id="legend-yellow-label">Tiền quà: &ge; 60.000 đ</span>
+      <div class="legend-pill">
+        <span class="legend-dot" style="background-color: var(--warning);"></span>
+        <span id="legend-yellow-label">Một phần: ≥ 60.000 đ</span>
       </div>
-      <div class="legend-pill" style="color: var(--danger);">
-        <span class="legend-dot" style="background: var(--danger);"></span>
+      <div class="legend-pill">
+        <span class="legend-dot" style="background-color: var(--danger);"></span>
         <span id="legend-red-label">Chưa đủ: &lt; 60.000 đ</span>
       </div>
     </div>
+    <button class="btn" style="font-size: 12px; padding: 4px 10px;" id="btn-copy-report">
+      📋 Copy báo cáo Zalo
+    </button>
   </div>
 
-  <!-- Ô GHI CHÚ (Chỉnh sửa nội dung qua code ở biến FUND_NOTE) -->
-  <div class="note-card" id="fund-note-card">
-    <span class="note-icon">📝</span>
+  <!-- NOTE CARD -->
+  <div class="note-card" id="fund-note-card" style="display: none;">
+    <div class="note-icon">📢</div>
     <div class="note-body">
-      <div class="note-header">Ghi chú:</div>
+      <div class="note-header">Ghi chú & Thể lệ Quỹ:</div>
       <div id="fund-note-content"></div>
     </div>
   </div>
@@ -693,43 +740,40 @@
   <div class="toolbar">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input type="text" id="search-input" class="search-input" placeholder="Tìm theo tên hoặc STT...">
+      <input type="text" class="search-input" id="search-input" placeholder="Tìm tên hoặc STT thành viên...">
     </div>
-
-    <div class="filter-tabs">
-      <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (31)</button>
+    <div class="tab-filters">
+      <button class="tab-btn active" data-filter="all" id="tab-all">Tất cả (0)</button>
       <button class="tab-btn" data-filter="green" id="tab-green">🟢 Đạt mốc (0)</button>
       <button class="tab-btn" data-filter="yellow" id="tab-yellow">🟡 Một phần (0)</button>
-      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đủ (31)</button>
-    </div>
-
-    <div class="toolbar-actions">
-      <button class="btn btn-primary" id="btn-copy-report">
-        📋 Copy báo cáo Zalo
-      </button>
+      <button class="tab-btn" data-filter="red" id="tab-red">🔴 Chưa đủ (0)</button>
     </div>
   </div>
 
   <!-- TABLE -->
   <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th class="col-center" style="width: 60px;">STT</th>
-          <th>Họ và tên</th>
-          <th class="col-right" style="width: 160px;">Đã nộp</th>
-          <th class="col-center" style="width: 170px;">Trạng thái</th>
-          <th class="col-center" style="width: 130px;">Mã QR</th>
-        </tr>
-      </thead>
-      <tbody id="member-tbody">
-        <!-- Rendered dynamically -->
-      </tbody>
-    </table>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-center" style="width: 70px;">STT</th>
+            <th>Họ và Tên</th>
+            <th class="col-right" style="width: 150px;">Đã nộp</th>
+            <th class="col-center" style="width: 160px;">Trạng thái</th>
+            <th class="col-center" style="width: 130px;">Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="member-tbody">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- MODAL QR CODE -->
+<!-- ======================================================== -->
+<!-- MODAL: QUÉT MÃ QR NỘP QUỸ (SERVER-AUTHORITATIVE) -->
+<!-- ======================================================== -->
 <div class="modal-backdrop" id="modal-qr">
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal('modal-qr')">&times;</button>
@@ -737,30 +781,37 @@
     <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="qr-member-stt">STT: 01</p>
 
     <!-- BỘ CHỌN SỐ TIỀN QR -->
-    <div class="qr-amount-selector">
+    <div class="qr-amount-selector" style="margin-top: 14px;">
       <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">Chọn số tiền gắn vào QR:</div>
-      <div id="qr-quick-buttons" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
-        <!-- Các nút gợi ý thông minh tự sinh theo số tiền còn thiếu -->
-      </div>
+      <div id="qr-quick-buttons" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;"></div>
       <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
         <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); white-space: nowrap;">Hoặc nhập:</span>
         <input type="number" id="input-custom-qr-amount" step="10000" placeholder="Số tiền tùy ý (VD: 150000)" 
-               style="flex: 1; padding: 6px 10px; font-size: 13px; border: 1px solid var(--border); border-radius: 6px; outline: none;"
+               class="form-input" style="padding: 6px 10px; font-size: 13px;"
                oninput="onCustomAmountInput(this.value)">
       </div>
     </div>
 
     <div class="qr-card-box">
+      <div id="qr-loading-text" style="display: none; padding: 40px; color: var(--text-muted);">⏳ Đang tạo mã VietQR bảo mật...</div>
       <img id="qr-image-tag" class="qr-image" src="" alt="Mã VietQR Chuyển Khoản">
     </div>
 
     <div class="qr-bank-details">
-      <div>🏦 <strong>Ngân hàng:</strong> MBBank (Quân đội)</div>
-      <div>💳 <strong>Số tài khoản:</strong> <code>88808112007999</code></div>
-      <div>👤 <strong>Chủ tài khoản:</strong> <strong>NGUYEN DANG THANH</strong></div>
+      <div>🏦 <strong>Ngân hàng:</strong> <span id="qr-bank-name">MBBank</span></div>
+      <div>💳 <strong>Số tài khoản:</strong> <code id="qr-account-no">...</code></div>
+      <div>👤 <strong>Chủ tài khoản:</strong> <strong id="qr-account-name">...</strong></div>
       <div>💰 <strong>Số tiền:</strong> <strong style="color: #16a34a;" id="qr-suggested-amt">Tự nhập khi chuyển</strong></div>
       <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border);">
         📝 <strong>Nội dung:</strong> <span class="code-memo" id="qr-memo-code"></span>
+      </div>
+    </div>
+
+    <!-- HỘP CẢNH BÁO ĐỐI SOÁT NAPAS BẮT BUỘC -->
+    <div class="qr-security-warning">
+      <span>🛡️</span>
+      <div>
+        <strong>QUAN TRỌNG:</strong> Khi quét mã trên App ngân hàng, bạn <u>bắt buộc phải kiểm tra</u> tên người nhận hiển thị đúng là: <strong id="qr-verify-name">...</strong>. Nếu thấy tên khác, <strong>tuyệt đối không chuyển tiền</strong>!
       </div>
     </div>
 
@@ -778,6 +829,311 @@
   </div>
 </div>
 
+<!-- ======================================================== -->
+<!-- MODAL: TẠO QUỸ MỚI (MULTI-TENANT FUND CREATOR) -->
+<!-- ======================================================== -->
+<div class="modal-backdrop" id="modal-create-fund">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-create-fund')">&times;</button>
+    <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">🚀 Tạo Quỹ Mới</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Khởi tạo trang thu chi quỹ riêng cho lớp, nhóm bạn hoặc công ty chỉ trong 30 giây.</p>
+
+    <form id="form-create-fund" onsubmit="handleCreateFund(event)">
+      <div class="form-group">
+        <label class="form-label">Tên Quỹ / Mục đích thu *</label>
+        <input type="text" class="form-input" id="create-name" placeholder="VD: Quỹ Lớp 12A, Quỹ Đi Phượt Đà Lạt..." required minlength="2" maxlength="80">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ghi chú & Thể lệ quỹ <small>(Tùy chọn)</small></label>
+        <textarea class="form-textarea" id="create-note" rows="2" placeholder="VD: Tiền quà 50k, tiền ăn 150k. Hạn chót đóng ngày 20/10..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ngân hàng thụ hưởng *</label>
+          <select class="form-select" id="create-bank-bin" required>
+            <option value="970422" data-code="MBBank">MB Bank (Quân đội)</option>
+            <option value="970436" data-code="VCB">Vietcombank</option>
+            <option value="970407" data-code="TCB">Techcombank</option>
+            <option value="970416" data-code="ACB">ACB (Á Châu)</option>
+            <option value="970432" data-code="VPB">VPBank</option>
+            <option value="970423" data-code="TPB">TPBank</option>
+            <option value="970418" data-code="BIDV">BIDV</option>
+            <option value="970415" data-code="CTG">VietinBank</option>
+            <option value="970405" data-code="VBA">Agribank</option>
+            <option value="970448" data-code="OCB">OCB</option>
+            <option value="970441" data-code="VIB">VIB</option>
+            <option value="970437" data-code="HDB">HDBank</option>
+            <option value="970403" data-code="STB">Sacombank</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số tài khoản *</label>
+          <input type="text" class="form-input" id="create-account-no" placeholder="VD: 88808112007999" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tên chủ tài khoản * <small>(In hoa không dấu)</small></label>
+        <input type="text" class="form-input" id="create-account-name" placeholder="VD: NGUYEN DANG THANH" required style="text-transform: uppercase;">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Mốc Đạt (Màu Xanh)</label>
+          <input type="number" class="form-input" id="create-green-min" value="210000" step="10000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mốc Một phần (Màu Vàng)</label>
+          <input type="number" class="form-input" id="create-yellow-min" value="60000" step="10000">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          SePay API Key (Chuỗi bí mật xác thực) 
+          <small>— Tự sinh 32 ký tự ngẫu nhiên</small>
+        </label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" class="form-input" id="create-sepay-key" placeholder="32 ký tự bí mật..." style="font-family: monospace; font-size: 12px;">
+          <button type="button" class="btn" style="white-space: nowrap; font-size: 12px;" onclick="regenerateCreateApiKey()" title="Sinh mã 32 ký tự khác">
+            🎲 Đổi mã
+          </button>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">
+          💡 Hệ thống tự sinh sẵn mã 32 ký tự. Bạn chỉ việc copy dán vào <strong>my.sepay.vn</strong> khi cấu hình Webhook.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Danh sách thành viên * <small>(Mỗi dòng 1 người)</small></label>
+        <textarea class="form-textarea" id="create-members" rows="5" placeholder="Dán danh sách tên bạn bè (mỗi dòng 1 tên):
+Trương Hữu An
+Hà Duyên Hải Anh
+Lê Trung Anh
+..." required></textarea>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 18px;">
+        <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center; padding: 10px;" id="btn-submit-create">
+          🚀 Tạo Quỹ Ngay
+        </button>
+        <button type="button" class="btn" onclick="closeModal('modal-create-fund')">
+          Hủy
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: TẠO THÀNH CÔNG (SUCCESS LINKS) -->
+<!-- ======================================================== -->
+<div class="modal-backdrop" id="modal-created-success">
+  <div class="modal-content">
+    <div style="text-align: center; margin-bottom: 16px;">
+      <div style="font-size: 42px; margin-bottom: 6px;">🎉</div>
+      <h3 style="font-size: 20px; font-weight: 800; color: #15803d;">Tạo Quỹ Thành Công!</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Trang quỹ của bạn đã sẵn sàng tiếp nhận nộp tiền tự động.</p>
+    </div>
+
+    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-size: 13px;">
+      <div>🏷️ <strong>Tên quỹ:</strong> <span id="success-fund-name"></span></div>
+      <div>🔑 <strong>Mã tiền tố chuyển khoản:</strong> <code class="code-memo" id="success-fund-prefix"></code></div>
+    </div>
+
+    <!-- LINK CHIA SẺ -->
+    <div class="form-group">
+      <label class="form-label">🔗 Link công khai gửi cho bạn bè:</label>
+      <div style="display: flex; gap: 6px;">
+        <input type="text" class="form-input" id="success-share-link" readonly style="background: white; font-size: 12px;">
+        <button class="btn btn-primary" style="white-space: nowrap;" onclick="copyTextFromInput('success-share-link', 'Đã copy Link chia sẻ!')">
+          Copy Link
+        </button>
+      </div>
+    </div>
+
+    <!-- LINK QUẢN TRỊ ADMIN -->
+    <div class="form-group" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px; margin-bottom: 12px;">
+      <label class="form-label" style="color: #92400e;">👑 Link Quản Trị Bí Mật (Dành cho Thủ Quỹ):</label>
+      <div style="font-size: 11px; color: #b45309; margin-bottom: 6px;">
+        ⚠️ Lưu link này lại để bạn có thể vào xác nhận nộp tiền mặt, sửa thành viên và cấu hình SePay!
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <input type="text" class="form-input" id="success-admin-link" readonly style="background: white; font-size: 11px;">
+        <button class="btn" style="white-space: nowrap; background: #fef3c7; border-color: #fde68a; color: #92400e;" onclick="copyTextFromInput('success-admin-link', 'Đã copy Link Quản Trị!')">
+          Copy Link
+        </button>
+      </div>
+    </div>
+
+    <!-- KHUNG SEPAY WEBHOOK (PHƯƠNG ÁN B) -->
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px; margin-bottom: 14px;">
+      <div style="font-size: 12px; font-weight: 700; color: #166534; margin-bottom: 6px;">⚡ Cấu Hình Webhook Trên my.sepay.vn (Phương Án B):</div>
+      <div class="form-group" style="margin-bottom: 6px;">
+        <label class="form-label" style="font-size: 11px; color: #166534;">1. Webhook URL:</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" class="form-input" id="success-webhook-url" readonly style="background: white; font-size: 11px; font-family: monospace;">
+          <button class="btn btn-primary" style="white-space: nowrap; font-size: 11px; padding: 4px 8px;" onclick="copyTextFromInput('success-webhook-url', 'Đã copy Webhook URL!')">Copy URL</button>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label" style="font-size: 11px; color: #166534;">2. API Key (32 ký tự bí mật):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" class="form-input" id="success-sepay-key" readonly style="background: white; font-size: 11px; font-family: monospace;">
+          <button class="btn btn-primary" style="white-space: nowrap; font-size: 11px; padding: 4px 8px;" onclick="copyTextFromInput('success-sepay-key', 'Đã copy API Key!')">Copy Key</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 4px;" id="btn-goto-fund">
+      Truy cập Trang Quỹ Vừa Tạo ➜
+    </button>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: QUẢN TRỊ QUỸ (ADMIN DASHBOARD) -->
+<!-- ======================================================== -->
+<div class="modal-backdrop" id="modal-admin">
+  <div class="modal-content" style="max-width: 600px;">
+    <button class="modal-close" onclick="closeModal('modal-admin')">&times;</button>
+    <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">👑 Quản Trị Quỹ (Thủ Quỹ)</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px; margin-bottom: 14px;">Quản lý thành viên, nộp tiền mặt và kết nối SePay</p>
+
+    <!-- ADMIN TABS -->
+    <div style="display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 8px; margin-bottom: 16px;">
+      <button type="button" class="tab-btn active" id="admin-tab-cash" onclick="switchAdminTab('cash')" style="flex: 1;">💵 Nộp Tiền Mặt</button>
+      <button type="button" class="tab-btn" id="admin-tab-members" onclick="switchAdminTab('members')" style="flex: 1;">👥 Thành Viên</button>
+      <button type="button" class="tab-btn" id="admin-tab-settings" onclick="switchAdminTab('settings')" style="flex: 1;">⚙️ Cài Đặt & SePay</button>
+    </div>
+
+    <!-- TAB 1: NỘP TIỀN MẶT -->
+    <div id="admin-panel-cash">
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
+        <div style="font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px;">💵 Ghi nhận Đóng Tiền Mặt (Offline):</div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 12px;">Chọn thành viên:</label>
+          <select class="form-select" id="admin-select-member" style="font-size: 13px;"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 12px;">Số tiền (VNĐ):</label>
+            <input type="number" class="form-input" id="admin-cash-amount" placeholder="VD: 210000" step="10000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 12px;">Hành động:</label>
+            <select class="form-select" id="admin-cash-mode" style="font-size: 13px;">
+              <option value="add">Cộng dồn vào số cũ</option>
+              <option value="set">Đặt lại số dư này</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleAdminMarkPaid()">
+          ✓ Xác Nhận Nộp Tiền Mặt
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 2: QUẢN LÝ THÀNH VIÊN -->
+    <div id="admin-panel-members" style="display: none;">
+      <!-- FORM THÊM THÀNH VIÊN -->
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+        <div style="font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px;">➕ Thêm Thành Viên Mới:</div>
+        <div class="form-row">
+          <div class="form-group" style="flex: 2; margin-bottom: 6px;">
+            <input type="text" class="form-input" id="admin-new-member-name" placeholder="Họ và tên bạn mới...">
+          </div>
+          <div class="form-group" style="flex: 1; margin-bottom: 6px;">
+            <input type="text" class="form-input" id="admin-new-member-note" placeholder="Ghi chú (tuỳ chọn)...">
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 12px;" onclick="handleAdminAddMember()">
+          + Thêm Vào Danh Sách Quỹ
+        </button>
+      </div>
+
+      <!-- DANH SÁCH THÀNH VIÊN HIỆN TẠI -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Danh sách thành viên hiện có:</span>
+        <span style="font-size: 11px; color: var(--text-muted);" id="admin-members-count">0 bạn</span>
+      </div>
+      <div id="admin-members-list-box" style="max-height: 240px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px; background: white;">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- TAB 3: CÀI ĐẶT QUỸ & SEPAY (PHƯƠNG ÁN B) -->
+    <div id="admin-panel-settings" style="display: none;">
+      <!-- HỘP SEPAY WEBHOOK RIÊNG (PHƯƠNG ÁN B) -->
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; margin-bottom: 14px;">
+        <div style="font-size: 13px; font-weight: 700; color: #166534; margin-bottom: 4px;">⚡ Kết Nối Tài Khoản SePay Riêng (Phương Án B):</div>
+        <p style="font-size: 11px; color: #15803d; margin-bottom: 8px; line-height: 1.4;">
+          Bạn dùng tài khoản SePay miễn phí của riêng mình để không bị giới hạn số giao dịch chung của hệ thống.
+        </p>
+        
+        <div class="form-group" style="margin-bottom: 8px;">
+          <label class="form-label" style="font-size: 12px; color: #166534;">1. Webhook URL (Copy dán vào my.sepay.vn):</label>
+          <div style="display: flex; gap: 6px;">
+            <input type="text" class="form-input" id="admin-sepay-webhook-url" readonly style="background: white; font-size: 11px;">
+            <button type="button" class="btn btn-primary" style="white-space: nowrap; font-size: 12px;" onclick="copyTextFromInput('admin-sepay-webhook-url', 'Đã copy Webhook URL!')">
+              Copy URL
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" style="font-size: 12px; color: #166534;">2. API Key SePay (32 ký tự bí mật):</label>
+          <div style="display: flex; gap: 6px;">
+            <input type="text" class="form-input" id="admin-sepay-api-key" placeholder="32 ký tự ngẫu nhiên" style="font-family: monospace; font-size: 12px;">
+            <button type="button" class="btn" style="white-space: nowrap; font-size: 11px; padding: 4px 8px;" onclick="generateAdminApiKey()" title="Tự sinh mã 32 ký tự mới">
+              🎲 Sinh mới
+            </button>
+            <button type="button" class="btn" style="white-space: nowrap; font-size: 11px; padding: 4px 8px;" onclick="copyTextFromInput('admin-sepay-api-key', 'Đã copy API Key!')">
+              Copy Key
+            </button>
+          </div>
+          <div style="font-size: 10px; color: #166534; margin-top: 3px;">
+            * Vào <strong>my.sepay.vn</strong> ➔ <strong>Cấu hình Webhook</strong> ➔ Tạo Webhook với URL và API Key ở trên để kích hoạt tự động nhảy số.
+          </div>
+        </div>
+      </div>
+
+      <!-- SỬA THÔNG TIN CƠ BẢN -->
+      <div class="form-group">
+        <label class="form-label" style="font-size: 12px;">Tên Quỹ:</label>
+        <input type="text" class="form-input" id="admin-edit-fund-name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" style="font-size: 12px;">Ghi chú & Thể lệ Quỹ:</label>
+        <textarea class="form-textarea" id="admin-edit-fund-note" rows="2"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 12px;">Mốc Đạt (Xanh):</label>
+          <input type="number" class="form-input" id="admin-edit-green-min" step="10000">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-size: 12px;">Mốc Một phần (Vàng):</label>
+          <input type="number" class="form-input" id="admin-edit-yellow-min" step="10000">
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="handleAdminSaveSettings()">
+        💾 Lưu Cài Đặt Quỹ & SePay
+      </button>
+    </div>
+
+    <div style="margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px;">
+      <button type="button" class="btn" style="width: 100%; justify-content: center;" onclick="closeModal('modal-admin')">
+        Đóng
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- TOAST -->
 <div class="toast" id="toast">
@@ -786,92 +1142,22 @@
 </div>
 
 <script>
-  const BANK_CONFIG = {
-    bin: '970422',
-    accountNo: '88808112007999',
-    accountName: 'NGUYEN DANG THANH',
-    suggestedAmount: 210000
-  };
-
-  const API_ENDPOINT = '/api/members';
-
   // ========================================================
-  // 📝 1. PHẦN GHI CHÚ CHUNG CỦA QUỸ (Sửa nội dung ở đây qua code)
-  // Nếu muốn ẩn ô này, chỉ cần để trống: const FUND_NOTE = "";
+  // XSS PROTECTION: Hàm Escape HTML thuần an toàn
   // ========================================================
-  const FUND_NOTE = `Tiền quà sẽ là 33k, 5 suất của các bạn nữ sẽ là 27k, 150k là tiền đi ăn. Anh em có thể Donate thêm nhé!`;
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return String(str || '');
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
-  // ========================================================
-  // 📝 2. GHI CHÚ RIÊNG CHO TỪNG THÀNH VIÊN (Tuỳ chọn theo STT)
-  // Cú pháp: [STT]: "Nội dung ghi chú"
-  // ========================================================
-  const MEMBER_NOTES = {
-    // 1: "Đã nộp tiền mặt",
-    // 30: "Thủ quỹ",
-  };
-
-  const MEMBER_NAMES = [
-    "Trương Hữu An",
-    "Hà Duyên Hải Anh",
-    "Lê Trung Anh",
-    "Nguyễn Danh Bảo",
-    "Lê Minh Bách Chuyên",
-    "Trần Việt Dũng",
-    "Lê Anh Duy",
-    "Chu Thế Đạt",
-    "Nguyễn Quang Đạt",
-    "Lê Minh Hiếu",
-    "Võ Tá Hoàng",
-    "Nguyễn Tuấn Hùng",
-    "Phan Đức Huy",
-    "Phan Trung Kiên",
-    "Nguyễn Việt Khánh",
-    "Hoàng Minh Long",
-    "Trương Quốc Mạnh",
-    "Lê Hoàng Minh",
-    "Lê Quang Minh",
-    "Nguyễn Ngọc Minh",
-    "Nguyễn An Nguyên",
-    "Phạm Quang Nhật",
-    "Trần Đức Phúc",
-    "Nguyễn Ngọc Quang",
-    "Trần Lê Minh Quân",
-    "Cao Ngọc Trường Sơn",
-    "Nguyễn Khắc Thành Tôn",
-    "Lê Tuấn Tú",
-    "Bùi Minh Thái",
-    "Nguyễn Đăng Thành",
-    "Cao Anh Vũ"
-  ];
-
-  const DEFAULT_MEMBERS = MEMBER_NAMES.map((name, i) => ({
-    id: i + 1,
-    name,
-    paidAmount: 0
-  }));
-
-  // Quy tắc mốc màu cố định
-  const colorRules = { greenMin: 210000, yellowMin: 60000 };
-  try { localStorage.removeItem('q_quy_color_rules'); } catch(e) {}
-
-  // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
-  let members = (function() {
-    try {
-      localStorage.removeItem('q_quy_members_v3');
-      localStorage.removeItem('q_quy_members_v4');
-      const cached = localStorage.getItem('q_quy_members_v5');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length === MEMBER_NAMES.length) {
-          return parsed;
-        }
-      }
-    } catch(e) {}
-    return DEFAULT_MEMBERS;
-  })();
-
-  let currentFilter = 'all';
-  let searchQuery = '';
+  function formatMoney(num) {
+    return new Intl.NumberFormat('vi-VN').format(num || 0) + ' đ';
+  }
 
   function removeVietnameseTones(str) {
     if (!str) return '';
@@ -880,56 +1166,83 @@
               .replace(/đ/g, 'd').replace(/Đ/g, 'D');
   }
 
-  function formatMoney(num) {
-    return new Intl.NumberFormat('vi-VN').format(num || 0) + ' đ';
+  // ========================================================
+  // ĐỊNH TUYẾN QUỸ ĐỘNG (MULTI-TENANT ROUTING)
+  // ========================================================
+  function getCurrentFundSlug() {
+    const path = window.location.pathname;
+    // Bắt /f/[slug]
+    const match = path.match(/^\/f\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) return match[1];
+
+    // Bắt query ?f=... hoặc ?fund=...
+    const params = new URLSearchParams(window.location.search);
+    const paramSlug = params.get('f') || params.get('fund');
+    if (paramSlug) return paramSlug;
+
+    return 'default';
   }
 
-  function getMemberTier(amount) {
-    const amt = Number(amount || 0);
-    if (amt >= colorRules.greenMin) {
-      return { tier: 'green', class: 'tier-green', label: '✓ Đi ăn' };
+  function getAdminKey() {
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get('admin');
+    if (key) {
+      try {
+        localStorage.setItem('admin_key_' + currentFundSlug, key);
+      } catch(e) {}
+      return key;
     }
-    if (amt >= colorRules.yellowMin) {
-      return { tier: 'yellow', class: 'tier-yellow', label: '⏳ Đã đủ tiền quà' };
+    try {
+      return localStorage.getItem('admin_key_' + currentFundSlug) || '';
+    } catch(e) {
+      return '';
     }
-    return { tier: 'red', class: 'tier-red', label: amt === 0 ? '❌ Chưa nộp' : '⚠️ Chưa đủ tiền quà' };
   }
 
-  function getMemo(member) {
-    const stt = String(member.id).padStart(2, '0');
-    const nameClean = member.name ? removeVietnameseTones(member.name).toUpperCase().trim() : '';
-    return nameClean ? `Q ${stt} ${nameClean}` : `Q ${stt}`;
-  }
+  const currentFundSlug = getCurrentFundSlug();
+  const currentAdminKey = getAdminKey();
 
-  // CẬP NHẬT GIAO DIỆN QUY TẮC MỐC MÀU
-  function updateRulesLegendUI() {
-    document.getElementById('legend-green-label').textContent = `Đi ăn: ≥ ${formatMoney(colorRules.greenMin)}`;
-    document.getElementById('legend-yellow-label').textContent = `Tiền quà: ≥ ${formatMoney(colorRules.yellowMin)}`;
-    document.getElementById('legend-red-label').textContent = `Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
-  }
+  let fundData = null;
+  let members = [];
+  let colorRules = { greenMin: 210000, yellowMin: 60000 };
+  let currentFilter = 'all';
+  let searchQuery = '';
+  let currentActiveMember = null;
+  let currentSelectedAmount = 0;
 
+  // ========================================================
   // FETCH DỮ LIỆU TỪ SERVER VERCEL API
-  async function fetchServerData() {
+  // ========================================================
+  async function fetchFundData() {
     if (window.location.protocol === 'file:') return;
     try {
-      const res = await fetch(API_ENDPOINT);
+      let url = `/api/funds/detail?slug=${encodeURIComponent(currentFundSlug)}`;
+      if (currentAdminKey) {
+        url += `&admin=${encodeURIComponent(currentAdminKey)}`;
+      }
+
+      const res = await fetch(url, {
+        headers: currentAdminKey ? { 'x-admin-key': currentAdminKey } : {}
+      });
+
       if (res.ok) {
-        const data = await res.json();
-        if (data && data.members && Array.isArray(data.members)) {
-          // Lấy danh sách thành viên và số dư chính xác từ server làm chuẩn
-          members = data.members.map(sm => ({
-            ...sm,
-            paidAmount: Number(sm.paidAmount || 0)
-          }));
+        const json = await res.json();
+        if (json && json.fund) {
+          fundData = json.fund;
+          members = fundData.members || [];
+          colorRules = {
+            greenMin: Number(fundData.greenMin) || 210000,
+            yellowMin: Number(fundData.yellowMin) || 60000
+          };
 
-          try {
-            localStorage.setItem('q_quy_members_v5', JSON.stringify(members));
-          } catch(e) {}
-
+          updateFundHeaderUI();
           updateKPIs();
           renderTable();
+
+          if (fundData.isAdmin) {
+            document.getElementById('btn-admin-manage').style.display = 'inline-flex';
+          }
           document.getElementById('sync-label').textContent = 'Đồng bộ tự động trực tuyến';
-          return;
         }
       }
     } catch (e) {
@@ -937,8 +1250,45 @@
     }
   }
 
+  function updateFundHeaderUI() {
+    if (!fundData) return;
+    document.title = `${fundData.name} | Q - Quỹ`;
+    document.getElementById('nav-app-name').textContent = fundData.name;
+    document.getElementById('hero-title').textContent = fundData.name;
+    document.getElementById('hero-account-no').textContent = fundData.accountNo;
+    document.getElementById('hero-bank-name').textContent = fundData.bankCode || 'MBBank';
+    document.getElementById('hero-account-name').textContent = fundData.accountName;
+    document.getElementById('hero-memo-syntax').textContent = `${fundData.prefix || 'Q'} [STT]`;
+
+    // Cập nhật nhãn mốc màu
+    document.getElementById('legend-green-label').textContent = `Đạt mốc: ≥ ${formatMoney(colorRules.greenMin)}`;
+    document.getElementById('legend-yellow-label').textContent = `Một phần: ≥ ${formatMoney(colorRules.yellowMin)}`;
+    document.getElementById('legend-red-label').textContent = `Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
+
+    // Ghi chú quỹ
+    const noteCard = document.getElementById('fund-note-card');
+    const noteContent = document.getElementById('fund-note-content');
+    if (fundData.note && fundData.note.trim()) {
+      noteContent.innerHTML = escapeHtml(fundData.note).replace(/\n/g, '<br>');
+      noteCard.style.display = 'flex';
+    } else {
+      noteCard.style.display = 'none';
+    }
+  }
+
+  function getMemberTier(amount) {
+    const amt = Number(amount || 0);
+    if (amt >= colorRules.greenMin) {
+      return { tier: 'green', class: 'tier-green', label: '✓ Đạt mốc' };
+    }
+    if (amt >= colorRules.yellowMin) {
+      return { tier: 'yellow', class: 'tier-yellow', label: '⏳ Một phần' };
+    }
+    return { tier: 'red', class: 'tier-red', label: amt === 0 ? '❌ Chưa nộp' : '⚠️ Chưa đủ' };
+  }
+
   function updateKPIs() {
-    const total = members.length || 22;
+    const total = members.length;
     let greenCount = 0;
     let yellowCount = 0;
     let redCount = 0;
@@ -958,7 +1308,7 @@
 
     document.getElementById('kpi-total').textContent = total;
     document.getElementById('kpi-green-count').textContent = `${greenCount} / ${total}`;
-    document.getElementById('kpi-green-desc').textContent = `${((greenCount / total) * 100).toFixed(1)}% hoàn thành`;
+    document.getElementById('kpi-green-desc').textContent = `${total > 0 ? ((greenCount / total) * 100).toFixed(1) : 0}% hoàn thành`;
     document.getElementById('kpi-collected').textContent = formatMoney(totalCollected);
     document.getElementById('kpi-contributing').textContent = `${contributingCount} bạn đã đóng góp`;
     document.getElementById('kpi-remaining-count').textContent = `${redCount} bạn`;
@@ -993,7 +1343,15 @@
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">Không tìm thấy thành viên phù hợp.</td></tr>`;
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 5;
+      td.style.textAlign = 'center';
+      td.style.padding = '32px';
+      td.style.color = 'var(--text-muted)';
+      td.textContent = 'Không tìm thấy thành viên phù hợp.';
+      tr.appendChild(td);
+      tbody.appendChild(tr);
       return;
     }
 
@@ -1004,57 +1362,116 @@
       tr.className = tierInfo.class;
 
       const sttFormatted = String(m.id).padStart(2, '0');
-      const customNote = (typeof MEMBER_NOTES !== 'undefined' && MEMBER_NOTES[m.id]) || m.note || '';
-      const noteHtml = customNote ? `<div class="member-note-badge">📝 ${customNote}</div>` : '';
+      const safeName = escapeHtml(m.name || ('Thành viên #' + sttFormatted));
+      const safeNote = m.note ? escapeHtml(m.note) : '';
 
-      tr.innerHTML = `
-        <td class="col-center"><span class="stt-badge">${sttFormatted}</span></td>
-        <td>
-          <div class="member-name">${m.name || ('Thành viên #' + sttFormatted)}</div>
-          ${noteHtml}
-        </td>
-        <td class="col-right">
-          <span class="amount-cell" style="color: ${tierInfo.tier === 'green' ? 'var(--success)' : (tierInfo.tier === 'yellow' ? 'var(--warning)' : 'var(--text-muted)')};">
-            ${formatMoney(amt)}
-          </span>
-        </td>
-        <td class="col-center">
-          <span class="badge-tier ${tierInfo.class}">
-            ${tierInfo.label}
-          </span>
-        </td>
-        <td class="col-center">
-          <button class="btn-qr" onclick="openQRModal(${m.id})">
-            📲 Quét QR
-          </button>
-        </td>
-      `;
+      // Cột 1: STT
+      const tdStt = document.createElement('td');
+      tdStt.className = 'col-center';
+      tdStt.innerHTML = `<span class="stt-badge">${sttFormatted}</span>`;
+
+      // Cột 2: Tên & Ghi chú
+      const tdName = document.createElement('td');
+      let noteHtml = safeNote ? `<div class="member-note-badge">📝 ${safeNote}</div>` : '';
+      tdName.innerHTML = `<div class="member-name">${safeName}</div>${noteHtml}`;
+
+      // Cột 3: Số tiền
+      const tdAmt = document.createElement('td');
+      tdAmt.className = 'col-right';
+      const color = tierInfo.tier === 'green' ? 'var(--success)' : (tierInfo.tier === 'yellow' ? 'var(--warning)' : 'var(--text-muted)');
+      tdAmt.innerHTML = `<span class="amount-cell" style="color: ${color};">${formatMoney(amt)}</span>`;
+
+      // Cột 4: Trạng thái
+      const tdStatus = document.createElement('td');
+      tdStatus.className = 'col-center';
+      tdStatus.innerHTML = `<span class="badge-tier ${tierInfo.class}">${tierInfo.label}</span>`;
+
+      // Cột 5: Nút QR
+      const tdAction = document.createElement('td');
+      tdAction.className = 'col-center';
+      const btnQr = document.createElement('button');
+      btnQr.className = 'btn-qr';
+      btnQr.textContent = '📲 Quét QR';
+      btnQr.onclick = () => openQRModal(m.id);
+      tdAction.appendChild(btnQr);
+
+      tr.appendChild(tdStt);
+      tr.appendChild(tdName);
+      tr.appendChild(tdAmt);
+      tr.appendChild(tdStatus);
+      tr.appendChild(tdAction);
+
       tbody.appendChild(tr);
     });
   }
 
-  let currentActiveMember = null;
-  let currentSelectedAmount = 0; // 0 = tự nhập khi quét app
+  // ========================================================
+  // SERVER-AUTHORITATIVE QR GENERATION
+  // ========================================================
+  window.openQRModal = async function(memberId) {
+    const member = members.find(m => Number(m.id) === Number(memberId));
+    if (!member) return;
+    currentActiveMember = member;
 
-  function getVietQRUrl(member, amount) {
-    const memo = getMemo(member);
-    let url = `https://img.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.accountNo}-compact2.png?addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(BANK_CONFIG.accountName)}`;
-    if (amount && amount > 0) {
-      url += `&amount=${amount}`;
+    const stt = String(member.id).padStart(2, '0');
+    const amt = Number(member.paidAmount || 0);
+
+    document.getElementById('qr-member-name').textContent = `Quét Mã Nộp: ${member.name}`;
+    document.getElementById('qr-member-stt').textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(amt)}`;
+
+    // Sinh các nút gợi ý số tiền
+    const buttonsContainer = document.getElementById('qr-quick-buttons');
+    buttonsContainer.innerHTML = '';
+
+    const remainingToGreen = Math.max(0, colorRules.greenMin - amt);
+    const remainingToYellow = Math.max(0, colorRules.yellowMin - amt);
+
+    const btnFree = document.createElement('button');
+    btnFree.type = 'button';
+    btnFree.className = 'btn-amt-pill active';
+    btnFree.dataset.amount = '0';
+    btnFree.textContent = 'Tự nhập trên App';
+    btnFree.onclick = () => changeQRAmount(0);
+    buttonsContainer.appendChild(btnFree);
+
+    if (remainingToGreen > 0) {
+      const btnGreen = document.createElement('button');
+      btnGreen.type = 'button';
+      btnGreen.className = 'btn-amt-pill';
+      btnGreen.dataset.amount = String(remainingToGreen);
+      btnGreen.textContent = amt > 0 ? `${formatMoney(remainingToGreen)} (Còn thiếu mốc Đạt)` : `${formatMoney(remainingToGreen)} (Mốc Đạt)`;
+      btnGreen.onclick = () => changeQRAmount(remainingToGreen);
+      buttonsContainer.appendChild(btnGreen);
     }
-    return url;
-  }
+
+    if (remainingToYellow > 0) {
+      const btnYellow = document.createElement('button');
+      btnYellow.type = 'button';
+      btnYellow.className = 'btn-amt-pill';
+      btnYellow.dataset.amount = String(remainingToYellow);
+      btnYellow.textContent = `${formatMoney(remainingToYellow)} (Một phần)`;
+      btnYellow.onclick = () => changeQRAmount(remainingToYellow);
+      buttonsContainer.appendChild(btnYellow);
+    }
+
+    const inputCustom = document.getElementById('input-custom-qr-amount');
+    if (inputCustom) inputCustom.value = '';
+
+    // Khởi tạo mặc định số tiền = 0
+    await changeQRAmount(0);
+
+    document.getElementById('modal-qr').classList.add('open');
+  };
 
   window.onCustomAmountInput = function(val) {
     const amt = Number(val) || 0;
     changeQRAmount(amt, true);
   };
 
-  window.changeQRAmount = function(amt, fromInput = false) {
+  window.changeQRAmount = async function(amt, fromInput = false) {
     if (!currentActiveMember) return;
     currentSelectedAmount = amt;
 
-    // Cập nhật nút active
     document.querySelectorAll('.btn-amt-pill').forEach(btn => {
       const btnAmt = Number(btn.dataset.amount || 0);
       btn.classList.toggle('active', !fromInput && btnAmt === amt);
@@ -1067,123 +1484,480 @@
 
     const amtEl = document.getElementById('qr-suggested-amt');
     if (amtEl) {
-      if (amt === 0) {
-        amtEl.textContent = 'Người chuyển tự nhập trên App';
-      } else {
-        amtEl.textContent = formatMoney(amt);
-      }
+      amtEl.textContent = amt === 0 ? 'Người chuyển tự nhập trên App' : formatMoney(amt);
     }
 
-    const url = getVietQRUrl(currentActiveMember, amt);
+    // GỌI SERVER API ĐỂ LẤY MÃ VIETQR CHÍNH HÃNG ĐÃ XÁC THỰC
     const imgEl = document.getElementById('qr-image-tag');
-    if (imgEl) imgEl.src = url;
+    const loadingEl = document.getElementById('qr-loading-text');
+
+    if (loadingEl) loadingEl.style.display = 'block';
+    if (imgEl) imgEl.style.display = 'none';
+
+    try {
+      const url = `/api/funds/qr?slug=${encodeURIComponent(currentFundSlug)}&memberId=${currentActiveMember.id}&amount=${amt}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const qrData = await res.json();
+        if (qrData && qrData.qrUrl) {
+          imgEl.src = qrData.qrUrl;
+          imgEl.onload = () => {
+            if (loadingEl) loadingEl.style.display = 'none';
+            imgEl.style.display = 'inline-block';
+          };
+
+          document.getElementById('qr-bank-name').textContent = qrData.bankCode || 'MBBank';
+          document.getElementById('qr-account-no').textContent = qrData.accountNo;
+          document.getElementById('qr-account-name').textContent = qrData.accountName;
+          document.getElementById('qr-verify-name').textContent = `${qrData.accountName} (${qrData.bankCode || 'MBBank'} - ${qrData.accountNo})`;
+          document.getElementById('qr-memo-code').textContent = qrData.memo;
+
+          // Thiết lập nút copy & download
+          document.getElementById('btn-copy-memo').onclick = function() {
+            navigator.clipboard.writeText(qrData.memo).then(() => {
+              showToast(`📋 Đã copy cú pháp: ${qrData.memo}`);
+            });
+          };
+
+          document.getElementById('btn-download-qr').onclick = async function() {
+            const btn = document.getElementById('btn-download-qr');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '⏳ Đang tải...';
+            try {
+              const resp = await fetch(qrData.qrUrl);
+              const blob = await resp.blob();
+              const blobUrl = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = blobUrl;
+              a.download = `QR_${currentFundSlug}_STT${qrData.memberStt}.png`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(blobUrl);
+              showToast('✅ Đã tải ảnh QR thành công!');
+            } catch(e) {
+              window.open(qrData.qrUrl, '_blank');
+            } finally {
+              btn.innerHTML = orig;
+            }
+          };
+          return;
+        }
+      }
+    } catch(err) {
+      console.warn('QR API Error:', err);
+    }
+
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (imgEl) imgEl.style.display = 'inline-block';
   };
 
-  // MODAL QR
-  window.openQRModal = function(id) {
-    const member = members.find(m => m.id === id);
-    if (!member) return;
-
-    currentActiveMember = member;
-    currentSelectedAmount = 0;
-
-    const stt = String(member.id).padStart(2, '0');
-    const memo = getMemo(member);
-    const nameClean = removeVietnameseTones(member.name || '').replace(/\s+/g, '_');
-    const amt = Number(member.paidAmount || 0);
-
-    document.getElementById('qr-member-name').textContent = member.name || ('Thành viên #' + stt);
-    document.getElementById('qr-member-stt').textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(amt)}`;
-    document.getElementById('qr-memo-code').textContent = memo;
-
-    // Sinh các nút gợi ý thông minh dựa trên số tiền còn thiếu của bạn này
-    const buttonsContainer = document.getElementById('qr-quick-buttons');
-    if (buttonsContainer) {
-      buttonsContainer.innerHTML = '';
-
-      const remainingToGreen = Math.max(0, colorRules.greenMin - amt);
-      const remainingToYellow = Math.max(0, colorRules.yellowMin - amt);
-
-      // 1. Nút tự nhập trên app (mặc định)
-      const btnFree = document.createElement('button');
-      btnFree.type = 'button';
-      btnFree.className = 'btn-amt-pill active';
-      btnFree.dataset.amount = '0';
-      btnFree.textContent = 'Tự nhập trên App';
-      btnFree.onclick = () => changeQRAmount(0);
-      buttonsContainer.appendChild(btnFree);
-
-      // 2. Nút đi ăn (nếu chưa đạt mốc 210k)
-      if (remainingToGreen > 0) {
-        const btnGreen = document.createElement('button');
-        btnGreen.type = 'button';
-        btnGreen.className = 'btn-amt-pill';
-        btnGreen.dataset.amount = String(remainingToGreen);
-        btnGreen.textContent = amt > 0 ? `${formatMoney(remainingToGreen)} (Còn thiếu để Đi ăn)` : `${formatMoney(remainingToGreen)} (Tiền quà + Đi ăn)`;
-        btnGreen.onclick = () => changeQRAmount(remainingToGreen);
-        buttonsContainer.appendChild(btnGreen);
+  // ========================================================
+  // THUẬT TOÁN TỰ SINH SEPAY API KEY 32 KÝ TỰ BẢO MẬT
+  // ========================================================
+  function generate32CharApiKey() {
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    const cryptoObj = window.crypto || window.msCrypto;
+    if (cryptoObj && cryptoObj.getRandomValues) {
+      const bytes = new Uint8Array(32);
+      cryptoObj.getRandomValues(bytes);
+      for (let i = 0; i < 32; i++) {
+        result += chars[bytes[i] % chars.length];
       }
+    } else {
+      for (let i = 0; i < 32; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+    }
+    return result;
+  }
 
-      // 3. Nút tiền quà (nếu chưa đạt mốc 60k)
-      if (remainingToYellow > 0) {
-        const btnYellow = document.createElement('button');
-        btnYellow.type = 'button';
-        btnYellow.className = 'btn-amt-pill';
-        btnYellow.dataset.amount = String(remainingToYellow);
-        btnYellow.textContent = `${formatMoney(remainingToYellow)} (Tiền quà)`;
-        btnYellow.onclick = () => changeQRAmount(remainingToYellow);
-        buttonsContainer.appendChild(btnYellow);
+  window.regenerateCreateApiKey = function() {
+    const el = document.getElementById('create-sepay-key');
+    if (el) {
+      el.value = generate32CharApiKey();
+      showToast('🎲 Đã sinh mã API Key 32 ký tự mới!');
+    }
+  };
+
+  window.generateAdminApiKey = function() {
+    const el = document.getElementById('admin-sepay-api-key');
+    if (el) {
+      el.value = generate32CharApiKey();
+      showToast('🎲 Đã sinh mã 32 ký tự mới! Bấm "Lưu Cài Đặt" để áp dụng.');
+    }
+  };
+
+  // ========================================================
+  // XỬ LÝ TẠO QUỸ MỚI (CREATE FUND)
+  // ========================================================
+  window.openCreateFundModal = function() {
+    const keyEl = document.getElementById('create-sepay-key');
+    if (keyEl && !keyEl.value) {
+      keyEl.value = generate32CharApiKey();
+    }
+    document.getElementById('modal-create-fund').classList.add('open');
+  };
+
+  window.handleCreateFund = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit-create');
+    btn.disabled = true;
+    btn.textContent = '⏳ Đang khởi tạo...';
+
+    const bankSelect = document.getElementById('create-bank-bin');
+    const selectedOption = bankSelect.options[bankSelect.selectedIndex];
+
+    const sepayKeyInput = document.getElementById('create-sepay-key');
+    const sepayApiKey = sepayKeyInput ? sepayKeyInput.value.trim() : '';
+
+    const payload = {
+      name: document.getElementById('create-name').value.trim(),
+      note: document.getElementById('create-note').value.trim(),
+      bankBin: bankSelect.value,
+      bankCode: selectedOption.dataset.code || 'MBBank',
+      accountNo: document.getElementById('create-account-no').value.trim(),
+      accountName: document.getElementById('create-account-name').value.trim().toUpperCase(),
+      greenMin: Number(document.getElementById('create-green-min').value) || 210000,
+      yellowMin: Number(document.getElementById('create-yellow-min').value) || 60000,
+      sepayApiKey: sepayApiKey,
+      members: document.getElementById('create-members').value.trim()
+    };
+
+    try {
+      const res = await fetch('/api/funds/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        closeModal('modal-create-fund');
+        
+        // Hiển thị modal thành công
+        const origin = window.location.origin;
+        document.getElementById('success-fund-name').textContent = data.fund.name;
+        document.getElementById('success-fund-prefix').textContent = data.fund.prefix;
+        document.getElementById('success-share-link').value = `${origin}${data.fund.shareUrl}`;
+        document.getElementById('success-admin-link').value = `${origin}${data.fund.adminUrl}`;
+
+        // Hiển thị SePay Webhook Info (Phương án B)
+        const webhookUrlEl = document.getElementById('success-webhook-url');
+        if (webhookUrlEl) {
+          webhookUrlEl.value = `${origin}${data.fund.webhookUrl || ('/api/sepay-webhook?slug=' + data.fund.slug)}`;
+        }
+        const keyEl = document.getElementById('success-sepay-key');
+        if (keyEl) {
+          keyEl.value = data.fund.sepayApiKey || sepayApiKey;
+        }
+
+        document.getElementById('btn-goto-fund').onclick = () => {
+          window.location.href = data.fund.adminUrl;
+        };
+
+        document.getElementById('modal-created-success').classList.add('open');
+      } else {
+        alert('Lỗi tạo quỹ: ' + (data.message || 'Vui lòng kiểm tra lại thông tin.'));
+      }
+    } catch (err) {
+      alert('Không thể kết nối đến máy chủ: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🚀 Tạo Quỹ Ngay';
+    }
+  };
+
+  // ========================================================
+  // XỬ LÝ QUẢN TRỊ ADMIN (3 TABS)
+  // ========================================================
+  window.openAdminModal = function() {
+    const sel = document.getElementById('admin-select-member');
+    if (sel) {
+      sel.innerHTML = '';
+      members.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `#${String(m.id).padStart(2, '0')} - ${m.name} (Đã nộp: ${formatMoney(m.paidAmount)})`;
+        sel.appendChild(opt);
+      });
+    }
+    switchAdminTab('cash');
+    document.getElementById('modal-admin').classList.add('open');
+  };
+
+  window.switchAdminTab = function(tab) {
+    const btnCash = document.getElementById('admin-tab-cash');
+    const btnMembers = document.getElementById('admin-tab-members');
+    const btnSettings = document.getElementById('admin-tab-settings');
+
+    if (btnCash) btnCash.classList.toggle('active', tab === 'cash');
+    if (btnMembers) btnMembers.classList.toggle('active', tab === 'members');
+    if (btnSettings) btnSettings.classList.toggle('active', tab === 'settings');
+
+    const panelCash = document.getElementById('admin-panel-cash');
+    const panelMembers = document.getElementById('admin-panel-members');
+    const panelSettings = document.getElementById('admin-panel-settings');
+
+    if (panelCash) panelCash.style.display = tab === 'cash' ? 'block' : 'none';
+    if (panelMembers) panelMembers.style.display = tab === 'members' ? 'block' : 'none';
+    if (panelSettings) panelSettings.style.display = tab === 'settings' ? 'block' : 'none';
+
+    if (tab === 'members') renderAdminMembersList();
+    if (tab === 'settings') loadAdminSettingsValues();
+  };
+
+  // TAB 1: GHI NHẬN NỘP TIỀN MẶT
+  window.handleAdminMarkPaid = async function() {
+    const memberId = document.getElementById('admin-select-member').value;
+    const amount = Number(document.getElementById('admin-cash-amount').value) || 0;
+    const mode = document.getElementById('admin-cash-mode').value;
+
+    if (!memberId || amount <= 0) {
+      alert('Vui lòng nhập số tiền hợp lệ.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/funds/admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': currentAdminKey
+        },
+        body: JSON.stringify({
+          slug: currentFundSlug,
+          action: 'mark_paid',
+          memberId,
+          amount,
+          mode
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        showToast('✅ Đã ghi nhận nộp tiền mặt thành công!');
+        closeModal('modal-admin');
+        fetchFundData();
+      } else {
+        alert('Lỗi: ' + (data.message || 'Không thể cập nhật.'));
+      }
+    } catch(err) {
+      alert('Lỗi kết nối: ' + err.message);
+    }
+  };
+
+  // TAB 2: QUẢN LÝ THÀNH VIÊN
+  function renderAdminMembersList() {
+    const box = document.getElementById('admin-members-list-box');
+    const countEl = document.getElementById('admin-members-count');
+    if (!box) return;
+    if (countEl) countEl.textContent = `${members.length} bạn`;
+    box.innerHTML = '';
+
+    members.forEach(m => {
+      const item = document.createElement('div');
+      item.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 13px; gap: 8px;';
+      const stt = String(m.id).padStart(2, '0');
+      const safeName = escapeHtml(m.name);
+      const safeNote = m.note ? escapeHtml(m.note) : '';
+
+      item.innerHTML = `
+        <div style="flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0;">
+          <span class="stt-badge" style="width: 24px; height: 24px; font-size: 11px; flex-shrink: 0;">${stt}</span>
+          <div style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            <strong style="color: var(--text);">${safeName}</strong>
+            ${safeNote ? `<span style="font-size: 11px; color: var(--text-muted); margin-left: 4px;">(${safeNote})</span>` : ''}
+          </div>
+          <span style="font-size: 11px; color: var(--success); font-weight: 700; margin-left: auto; flex-shrink: 0;">${formatMoney(m.paidAmount)}</span>
+        </div>
+        <div style="display: flex; gap: 4px; flex-shrink: 0;">
+          <button type="button" class="btn" style="font-size: 11px; padding: 3px 8px;" onclick="promptEditMember(${m.id})">Sửa</button>
+          <button type="button" class="btn" style="font-size: 11px; padding: 3px 8px; color: var(--danger); border-color: var(--danger-light); background: #fef2f2;" onclick="handleAdminDeleteMember(${m.id})">Xóa</button>
+        </div>
+      `;
+      box.appendChild(item);
+    });
+  }
+
+  window.handleAdminAddMember = async function() {
+    const nameInput = document.getElementById('admin-new-member-name');
+    const noteInput = document.getElementById('admin-new-member-note');
+    const name = nameInput.value.trim();
+    const note = noteInput.value.trim();
+    if (!name) {
+      alert('Vui lòng nhập tên thành viên.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/funds/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
+        body: JSON.stringify({ slug: currentFundSlug, action: 'add_member', name, note })
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        showToast(`✅ Đã thêm ${name} vào quỹ!`);
+        nameInput.value = '';
+        noteInput.value = '';
+        await fetchFundData();
+        renderAdminMembersList();
+      } else {
+        alert('Lỗi: ' + (data.message || 'Không thể thêm.'));
+      }
+    } catch(e) {
+      alert('Lỗi kết nối: ' + e.message);
+    }
+  };
+
+  window.promptEditMember = async function(id) {
+    const m = members.find(x => x.id === id);
+    if (!m) return;
+    const newName = prompt(`Nhập tên mới cho thành viên #${id}:`, m.name);
+    if (!newName || !newName.trim()) return;
+    const newNote = prompt(`Nhập ghi chú cho thành viên #${id}:`, m.note || '') || '';
+
+    try {
+      const res = await fetch('/api/funds/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
+        body: JSON.stringify({ slug: currentFundSlug, action: 'edit_member', id, name: newName.trim(), note: newNote.trim() })
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        showToast(`✅ Đã sửa thành viên #${id}!`);
+        await fetchFundData();
+        renderAdminMembersList();
+      } else {
+        alert('Lỗi: ' + (data.message || 'Không thể cập nhật.'));
+      }
+    } catch(e) {
+      alert('Lỗi kết nối: ' + e.message);
+    }
+  };
+
+  window.handleAdminDeleteMember = async function(id) {
+    const m = members.find(x => x.id === id);
+    if (!m) return;
+    if (m.paidAmount > 0) {
+      if (!confirm(`⚠️ Thành viên #${id}: "${m.name}" đã nộp ${formatMoney(m.paidAmount)}. Bạn có chắc chắn muốn xóa không?`)) {
+        return;
+      }
+    } else {
+      if (!confirm(`Bạn có chắc muốn xóa thành viên #${id}: "${m.name}" khỏi quỹ không?`)) {
+        return;
       }
     }
 
-    const inputCustom = document.getElementById('input-custom-qr-amount');
-    if (inputCustom) inputCustom.value = '';
-
-    // Khởi tạo mặc định: Không gán cứng số tiền
-    changeQRAmount(0);
-
-    document.getElementById('btn-copy-memo').onclick = function() {
-      navigator.clipboard.writeText(memo).then(() => {
-        showToast(`Đã sao chép: ${memo}`);
+    try {
+      const res = await fetch('/api/funds/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
+        body: JSON.stringify({ slug: currentFundSlug, action: 'delete_member', id })
       });
-    };
-
-    document.getElementById('btn-download-qr').onclick = async function() {
-      const btn = document.getElementById('btn-download-qr');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '⏳ Đang tải...';
-      const vietqrUrl = getVietQRUrl(member, currentSelectedAmount);
-      try {
-        const response = await fetch(vietqrUrl);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = `QR_MB_${stt}_${nameClean}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-        showToast(`✅ Đã tải ảnh QR của ${member.name || stt}!`);
-      } catch (err) {
-        window.open(vietqrUrl, '_blank');
-        showToast(`Đang mở ảnh QR trong tab mới...`);
-      } finally {
-        btn.innerHTML = originalText;
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        showToast(`✅ Đã xóa thành viên #${id}!`);
+        await fetchFundData();
+        renderAdminMembersList();
+      } else {
+        alert('Lỗi: ' + (data.message || 'Không thể xóa.'));
       }
-    };
-
-    document.getElementById('modal-qr').classList.add('open');
+    } catch(e) {
+      alert('Lỗi kết nối: ' + e.message);
+    }
   };
 
+  // TAB 3: CÀI ĐẶT QUỸ & SEPAY (PHƯƠNG ÁN B)
+  function loadAdminSettingsValues() {
+    if (!fundData) return;
+    const origin = window.location.origin;
+    const webhookUrlEl = document.getElementById('admin-sepay-webhook-url');
+    if (webhookUrlEl) {
+      webhookUrlEl.value = `${origin}/api/sepay-webhook?slug=${currentFundSlug}`;
+    }
+    const keyEl = document.getElementById('admin-sepay-api-key');
+    if (keyEl) keyEl.value = fundData.sepayApiKey || '';
 
+    const nameEl = document.getElementById('admin-edit-fund-name');
+    if (nameEl) nameEl.value = fundData.name || '';
 
+    const noteEl = document.getElementById('admin-edit-fund-note');
+    if (noteEl) noteEl.value = fundData.note || '';
+
+    const greenEl = document.getElementById('admin-edit-green-min');
+    if (greenEl) greenEl.value = colorRules.greenMin;
+
+    const yellowEl = document.getElementById('admin-edit-yellow-min');
+    if (yellowEl) yellowEl.value = colorRules.yellowMin;
+  }
+
+  window.handleAdminSaveSettings = async function() {
+    const sepayApiKey = document.getElementById('admin-sepay-api-key').value.trim();
+    const name = document.getElementById('admin-edit-fund-name').value.trim();
+    const note = document.getElementById('admin-edit-fund-note').value.trim();
+    const greenMin = Number(document.getElementById('admin-edit-green-min').value) || 210000;
+    const yellowMin = Number(document.getElementById('admin-edit-yellow-min').value) || 60000;
+
+    if (!name) {
+      alert('Tên quỹ không được để trống.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/funds/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
+        body: JSON.stringify({
+          slug: currentFundSlug,
+          action: 'update_fund',
+          name,
+          note,
+          greenMin,
+          yellowMin,
+          sepayApiKey
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        showToast('✅ Đã lưu cài đặt Quỹ & SePay thành công!');
+        await fetchFundData();
+      } else {
+        alert('Lỗi: ' + (data.message || 'Không thể lưu.'));
+      }
+    } catch(e) {
+      alert('Lỗi kết nối: ' + e.message);
+    }
+  };
+
+  // ========================================================
+  // CÁC HÀM TIỆN ÍCH UI
+  // ========================================================
   window.closeModal = function(id) {
     document.getElementById(id).classList.remove('open');
   };
 
+  window.copyTextFromInput = function(inputId, toastMsg) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    el.select();
+    navigator.clipboard.writeText(el.value).then(() => {
+      showToast(toastMsg || 'Đã copy vào clipboard!');
+    });
+  };
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 2800);
+  }
+
   // BÁO CÁO ZALO
   document.getElementById('btn-copy-report').onclick = function() {
+    if (!fundData) return;
     const total = members.length;
     let greenCount = 0;
     let yellowCount = 0;
@@ -1199,7 +1973,7 @@
       else redCount++;
     });
 
-    let report = `📊 BÁO CÁO TIẾN ĐỘ THU QUỸ: Q - QUỸ\n`;
+    let report = `📊 BÁO CÁO TIẾN ĐỘ THU QUỸ: ${fundData.name.toUpperCase()}\n`;
     report += `Tổng đã thu: ${formatMoney(totalCollected)}\n`;
     report += `Tiến độ: 🟢 ${greenCount} bạn đạt mốc | 🟡 ${yellowCount} bạn nộp một phần | 🔴 ${redCount} bạn chưa nộp\n`;
     report += `------------------------------------\n`;
@@ -1209,18 +1983,17 @@
       const amt = Number(m.paidAmount || 0);
       const t = getMemberTier(amt);
       const icon = t.tier === 'green' ? '🟢' : (t.tier === 'yellow' ? '🟡' : '🔴');
-      const note = (typeof MEMBER_NOTES !== 'undefined' && MEMBER_NOTES[m.id]) || m.note || '';
-      const noteText = note ? ` [📝 ${note}]` : '';
-      report += `${icon} ${stt}. ${m.name || ('Thành viên #' + stt)}: ${formatMoney(amt)}${noteText}\n`;
+      const noteText = m.note ? ` [📝 ${m.note}]` : '';
+      report += `${icon} ${stt}. ${m.name}: ${formatMoney(amt)}${noteText}\n`;
     });
 
     report += `------------------------------------\n`;
-    if (typeof FUND_NOTE !== 'undefined' && FUND_NOTE && FUND_NOTE.trim()) {
-      report += `📝 Ghi chú: ${FUND_NOTE.trim()}\n`;
+    if (fundData.note && fundData.note.trim()) {
+      report += `📝 Thể lệ: ${fundData.note.trim()}\n`;
       report += `------------------------------------\n`;
     }
-    report += `STK MBBank: ${BANK_CONFIG.accountNo} (${BANK_CONFIG.accountName})\n`;
-    report += `Cú pháp: Q [STT] [TÊN]`;
+    report += `STK ${fundData.bankCode || 'MBBank'}: ${fundData.accountNo} (${fundData.accountName})\n`;
+    report += `Cú pháp: ${fundData.prefix || 'Q'} [STT] [TÊN]`;
 
     navigator.clipboard.writeText(report).then(() => {
       showToast('📋 Đã copy báo cáo Zalo vào Clipboard!');
@@ -1240,13 +2013,6 @@
       renderTable();
     });
   });
-
-  function showToast(msg) {
-    const toast = document.getElementById('toast');
-    document.getElementById('toast-msg').textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); }, 2800);
-  }
 
   function triggerConfetti() {
     const canvas = document.getElementById('confetti-canvas');
@@ -1269,7 +2035,7 @@
 
     let frames = 0;
     function loop() {
-      if (frames > 160) {
+      if (frames > 140) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         return;
       }
@@ -1285,27 +2051,10 @@
     loop();
   }
 
-  function updateFundNoteUI() {
-    const card = document.getElementById('fund-note-card');
-    const content = document.getElementById('fund-note-content');
-    if (!card || !content) return;
-    if (typeof FUND_NOTE !== 'undefined' && FUND_NOTE && FUND_NOTE.trim()) {
-      content.innerHTML = FUND_NOTE.trim().replace(/\n/g, '<br>');
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
-  }
-
   // Khởi chạy
-  updateRulesLegendUI();
-  updateFundNoteUI();
-  updateKPIs();
-  renderTable();
-
-  // Polling đồng bộ mỗi 3 giây
-  fetchServerData();
-  setInterval(fetchServerData, 3000);
+  fetchFundData();
+  // Polling đồng bộ tự động mỗi 3 giây
+  setInterval(fetchFundData, 3000);
 </script>
 </body>
 </html>
