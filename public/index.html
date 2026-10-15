@@ -465,6 +465,8 @@
       border-radius: 16px;
       max-width: 440px;
       width: 100%;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
       padding: 24px;
       box-shadow: var(--shadow-lg);
       position: relative;
@@ -782,12 +784,12 @@
 </div>
 
 <script>
-  const BANK_CONFIG = {
+  const BANK_CONFIG = Object.freeze({
     bin: '970422',
     accountNo: '88808112007999',
     accountName: 'NGUYEN DANG THANH',
     suggestedAmount: 210000
-  };
+  });
 
   const API_ENDPOINT = '/api/members';
 
@@ -847,10 +849,51 @@
   }));
 
   // Quy tắc mốc màu cố định
-  const colorRules = { greenMin: 210000, yellowMin: 60000 };
+  const colorRules = Object.freeze({ greenMin: 210000, yellowMin: 60000 });
   try { localStorage.removeItem('q_quy_color_rules'); } catch(e) {}
 
-  // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
+  // Hàm chống XSS khi hiển thị dữ liệu vào HTML
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Hàm sao chép văn bản an toàn (hỗ trợ cả WebView nội bộ của Zalo / Messenger)
+  function copyTextToClipboard(text, successMsg) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(successMsg);
+      }).catch(() => {
+        fallbackCopyText(text, successMsg);
+      });
+    } else {
+      fallbackCopyText(text, successMsg);
+    }
+  }
+
+  function fallbackCopyText(text, successMsg) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast(successMsg);
+    } catch (e) {
+      showToast('⚠️ Trình duyệt chặn sao chép tự động');
+    }
+  }
+
+  // Khởi tạo danh sách từ cache cục bộ (Zero Latency + Chuẩn hóa cấu trúc an toàn)
   let members = (function() {
     try {
       localStorage.removeItem('q_quy_members_v3');
@@ -859,7 +902,15 @@
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length === MEMBER_NAMES.length) {
-          return parsed;
+          return DEFAULT_MEMBERS.map((def, idx) => {
+            const item = parsed.find(p => Number(p && p.id) === def.id) || parsed[idx] || {};
+            return {
+              id: def.id,
+              name: def.name,
+              paidAmount: Math.max(0, Math.round(Number(item.paidAmount) || 0)),
+              note: typeof item.note === 'string' ? item.note : ''
+            };
+          });
         }
       }
     } catch(e) {}
@@ -868,6 +919,9 @@
 
   let currentFilter = 'all';
   let searchQuery = '';
+  let lastMembersSignature = '';
+  let hasCelebratedAllGreen = false;
+  let isFetchingData = false;
 
   function removeVietnameseTones(str) {
     if (!str) return '';
@@ -904,37 +958,74 @@
     document.getElementById('legend-red-label').textContent = `Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
   }
 
-  // FETCH DỮ LIỆU TỪ SERVER VERCEL API
+  // FETCH DỮ LIỆU TỪ SERVER VERCEL API (Có khóa chống chồng lấp request & timeout 5s)
   async function fetchServerData() {
     if (window.location.protocol === 'file:') return;
+    if (document.visibilityState === 'hidden') return;
+    if (isFetchingData) return;
+
+    isFetchingData = true;
+    const syncLabelEl = document.getElementById('sync-label');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
     try {
-      const res = await fetch(API_ENDPOINT);
+      const res = await fetch(API_ENDPOINT, { signal: controller.signal });
       if (res.ok) {
         const data = await res.json();
-        if (data && data.members && Array.isArray(data.members)) {
-          // Lấy danh sách thành viên và số dư chính xác từ server làm chuẩn
-          members = data.members.map(sm => ({
-            ...sm,
-            paidAmount: Number(sm.paidAmount || 0)
-          }));
+        if (data && data.members && Array.isArray(data.members) && data.members.length === DEFAULT_MEMBERS.length) {
+          const nextMembers = DEFAULT_MEMBERS.map((def, idx) => {
+            const sm = data.members.find(item => Number(item && item.id) === def.id) || data.members[idx] || {};
+            return {
+              id: def.id,
+              name: typeof sm.name === 'string' && sm.name.trim() ? sm.name.trim() : def.name,
+              paidAmount: Math.max(0, Math.round(Number(sm.paidAmount) || 0)),
+              note: typeof sm.note === 'string' ? sm.note : ''
+            };
+          });
+
+          const nextSignature = JSON.stringify(nextMembers.map(m => [m.id, m.paidAmount, m.note || '']));
+          members = nextMembers;
 
           try {
             localStorage.setItem('q_quy_members_v5', JSON.stringify(members));
           } catch(e) {}
 
-          updateKPIs();
-          renderTable();
-          document.getElementById('sync-label').textContent = 'Đồng bộ tự động trực tuyến';
+          if (nextSignature !== lastMembersSignature) {
+            lastMembersSignature = nextSignature;
+            updateKPIs();
+            renderTable();
+
+            // Đồng bộ thông tin nếu Modal QR đang mở
+            if (currentActiveMember) {
+              const updatedActive = members.find(m => m.id === currentActiveMember.id);
+              if (updatedActive) {
+                currentActiveMember = updatedActive;
+                const stt = String(updatedActive.id).padStart(2, '0');
+                const sttEl = document.getElementById('qr-member-stt');
+                if (sttEl) {
+                  sttEl.textContent = `Thành viên STT: ${stt} • Đã nộp: ${formatMoney(updatedActive.paidAmount)}`;
+                }
+              }
+            }
+          }
+
+          if (syncLabelEl) syncLabelEl.textContent = 'Đồng bộ tự động trực tuyến';
           return;
         }
       }
+      if (syncLabelEl) syncLabelEl.textContent = 'Đang dùng dữ liệu đệm (Tạm gián đoạn)';
     } catch (e) {
       console.warn('API sync warning:', e);
+      if (syncLabelEl) syncLabelEl.textContent = 'Đang dùng dữ liệu đệm (Ngoại tuyến)';
+    } finally {
+      clearTimeout(timeoutId);
+      isFetchingData = false;
     }
   }
 
   function updateKPIs() {
-    const total = members.length || 22;
+    const total = members.length || 31;
     let greenCount = 0;
     let yellowCount = 0;
     let redCount = 0;
@@ -952,12 +1043,14 @@
       else redCount++;
     });
 
+    const remainingCount = redCount + yellowCount;
+
     document.getElementById('kpi-total').textContent = total;
     document.getElementById('kpi-green-count').textContent = `${greenCount} / ${total}`;
     document.getElementById('kpi-green-desc').textContent = `${((greenCount / total) * 100).toFixed(1)}% hoàn thành`;
     document.getElementById('kpi-collected').textContent = formatMoney(totalCollected);
     document.getElementById('kpi-contributing').textContent = `${contributingCount} bạn đã đóng góp`;
-    document.getElementById('kpi-remaining-count').textContent = `${redCount} bạn`;
+    document.getElementById('kpi-remaining-count').textContent = `${remainingCount} bạn`;
 
     document.getElementById('tab-all').textContent = `Tất cả (${total})`;
     document.getElementById('tab-green').textContent = `🟢 Đạt mốc (${greenCount})`;
@@ -965,7 +1058,12 @@
     document.getElementById('tab-red').textContent = `🔴 Chưa đủ (${redCount})`;
 
     if (greenCount === total && total > 0) {
-      triggerConfetti();
+      if (!hasCelebratedAllGreen) {
+        hasCelebratedAllGreen = true;
+        triggerConfetti();
+      }
+    } else {
+      hasCelebratedAllGreen = false;
     }
   }
 
@@ -980,9 +1078,11 @@
       if (currentFilter === 'red' && t.tier !== 'red') return false;
 
       if (searchQuery) {
-        const q = removeVietnameseTones(searchQuery.toLowerCase().trim());
+        const qRaw = searchQuery.trim();
+        const q = removeVietnameseTones(qRaw.toLowerCase());
         const nameNoTone = removeVietnameseTones((m.name || ('Thành viên ' + m.id)).toLowerCase());
-        const idMatch = m.id.toString() === searchQuery.trim();
+        const sttPadded = String(m.id).padStart(2, '0');
+        const idMatch = String(m.id) === qRaw || sttPadded === qRaw;
         return nameNoTone.includes(q) || idMatch;
       }
       return true;
@@ -994,19 +1094,21 @@
     }
 
     filtered.forEach(m => {
+      const safeId = Number(m.id) || 0;
       const amt = Number(m.paidAmount || 0);
       const tierInfo = getMemberTier(amt);
       const tr = document.createElement('tr');
       tr.className = tierInfo.class;
 
-      const sttFormatted = String(m.id).padStart(2, '0');
-      const customNote = (typeof MEMBER_NOTES !== 'undefined' && MEMBER_NOTES[m.id]) || m.note || '';
-      const noteHtml = customNote ? `<div class="member-note-badge">📝 ${customNote}</div>` : '';
+      const sttFormatted = String(safeId).padStart(2, '0');
+      const customNote = (typeof MEMBER_NOTES !== 'undefined' && MEMBER_NOTES[safeId]) || m.note || '';
+      const noteHtml = customNote ? `<div class="member-note-badge">📝 ${escapeHtml(customNote)}</div>` : '';
+      const safeName = escapeHtml(m.name || ('Thành viên #' + sttFormatted));
 
       tr.innerHTML = `
         <td class="col-center"><span class="stt-badge">${sttFormatted}</span></td>
         <td>
-          <div class="member-name">${m.name || ('Thành viên #' + sttFormatted)}</div>
+          <div class="member-name">${safeName}</div>
           ${noteHtml}
         </td>
         <td class="col-right">
@@ -1020,7 +1122,7 @@
           </span>
         </td>
         <td class="col-center">
-          <button class="btn-qr" onclick="openQRModal(${m.id})">
+          <button class="btn-qr" onclick="openQRModal(${safeId})">
             📲 Quét QR
           </button>
         </td>
@@ -1087,18 +1189,24 @@
     changeQRAmount(0);
 
     document.getElementById('btn-copy-memo').onclick = function() {
-      navigator.clipboard.writeText(memo).then(() => {
-        showToast(`Đã sao chép: ${memo}`);
-      });
+      copyTextToClipboard(memo, `Đã sao chép: ${memo}`);
     };
 
-    document.getElementById('btn-download-qr').onclick = async function() {
-      const btn = document.getElementById('btn-download-qr');
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '⏳ Đang tải...';
-      const vietqrUrl = getVietQRUrl(member, currentSelectedAmount);
+    const downloadBtn = document.getElementById('btn-download-qr');
+    downloadBtn.disabled = false;
+    downloadBtn.innerHTML = '📥 Tải ảnh QR';
+
+    downloadBtn.onclick = async function() {
+      if (downloadBtn.disabled) return;
+      downloadBtn.disabled = true;
+      downloadBtn.innerHTML = '⏳ Đang tải...';
+      const activeMember = currentActiveMember || member;
+      const vietqrUrl = getVietQRUrl(activeMember, currentSelectedAmount);
       try {
         const response = await fetch(vietqrUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1108,23 +1216,34 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(blobUrl);
-        showToast(`✅ Đã tải ảnh QR của ${member.name || stt}!`);
+        showToast(`✅ Đã tải ảnh QR của ${activeMember.name || stt}!`);
       } catch (err) {
-        window.open(vietqrUrl, '_blank');
+        window.open(vietqrUrl, '_blank', 'noopener,noreferrer');
         showToast(`Đang mở ảnh QR trong tab mới...`);
       } finally {
-        btn.innerHTML = originalText;
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = '📥 Tải ảnh QR';
       }
     };
 
     document.getElementById('modal-qr').classList.add('open');
   };
 
-
-
   window.closeModal = function(id) {
     document.getElementById(id).classList.remove('open');
   };
+
+  document.getElementById('modal-qr').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal('modal-qr');
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal('modal-qr');
+    }
+  });
 
   // BÁO CÁO ZALO
   document.getElementById('btn-copy-report').onclick = function() {
@@ -1145,7 +1264,7 @@
 
     let report = `📊 BÁO CÁO TIẾN ĐỘ THU QUỸ: Q - QUỸ\n`;
     report += `Tổng đã thu: ${formatMoney(totalCollected)}\n`;
-    report += `Tiến độ: 🟢 ${greenCount} bạn đạt mốc | 🟡 ${yellowCount} bạn nộp một phần | 🔴 ${redCount} bạn chưa nộp\n`;
+    report += `Tiến độ: 🟢 ${greenCount} bạn đạt mốc | 🟡 ${yellowCount} bạn nộp một phần | 🔴 ${redCount} bạn chưa đủ mốc quà\n`;
     report += `------------------------------------\n`;
 
     members.forEach(m => {
@@ -1166,9 +1285,7 @@
     report += `STK MBBank: ${BANK_CONFIG.accountNo} (${BANK_CONFIG.accountName})\n`;
     report += `Cú pháp: Q [STT] [TÊN]`;
 
-    navigator.clipboard.writeText(report).then(() => {
-      showToast('📋 Đã copy báo cáo Zalo vào Clipboard!');
-    });
+    copyTextToClipboard(report, '📋 Đã copy báo cáo Zalo vào Clipboard!');
   };
 
   document.getElementById('search-input').addEventListener('input', function(e) {
@@ -1234,7 +1351,7 @@
     const content = document.getElementById('fund-note-content');
     if (!card || !content) return;
     if (typeof FUND_NOTE !== 'undefined' && FUND_NOTE && FUND_NOTE.trim()) {
-      content.innerHTML = FUND_NOTE.trim().replace(/\n/g, '<br>');
+      content.innerHTML = escapeHtml(FUND_NOTE.trim()).replace(/\n/g, '<br>');
       card.style.display = 'flex';
     } else {
       card.style.display = 'none';
@@ -1247,9 +1364,14 @@
   updateKPIs();
   renderTable();
 
-  // Polling đồng bộ mỗi 3 giây
+  // Polling đồng bộ mỗi 3 giây (tự động tạm dừng khi ẩn tab và đồng bộ ngay khi mở lại tab)
   fetchServerData();
   setInterval(fetchServerData, 3000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      fetchServerData();
+    }
+  });
 </script>
 </body>
 </html>
