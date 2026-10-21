@@ -38,7 +38,8 @@ export const MEMBER_NAMES = [
   "Lê Tuấn Tú",
   "Bùi Minh Thái",
   "Nguyễn Đăng Thành",
-  "Cao Anh Vũ"
+  "Cao Anh Vũ",
+  "Bùi Đức Duẩn"
 ];
 
 // Tự động sinh danh sách thành viên kèm STT (id)
