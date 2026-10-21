@@ -109,7 +109,7 @@ export const MEMBER_NAMES = [
   // ... thêm các thành viên khác
 ];
 ```
-*(Tùy chọn: Đồng bộ danh sách tên vào mảng `MEMBER_NAMES` trong [public/index.html](file:///Users/dangthanh/Downloads/Q-Quy/public/index.html) để hiển thị chuẩn khi mở file tĩnh offline).*
+*(Lưu ý: api/_members.js là nguồn dữ liệu chuẩn duy nhất (Single Source of Truth), frontend sẽ tự động đồng bộ danh sách mới nhất từ server).*
 
 #### 2. Cập nhật thông tin nhận tiền:
 Mở [api/members.js](file:///Users/dangthanh/Downloads/Q-Quy/api/members.js) và [public/index.html](file:///Users/dangthanh/Downloads/Q-Quy/public/index.html), tìm `BANK_CONFIG` và thay bằng thông tin tài khoản của bạn:

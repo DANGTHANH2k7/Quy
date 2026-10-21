@@ -806,64 +806,35 @@
     // 30: "Thủ quỹ",
   };
 
-  const MEMBER_NAMES = [
-    "Trương Hữu An",
-    "Hà Duyên Hải Anh",
-    "Lê Trung Anh",
-    "Nguyễn Danh Bảo",
-    "Lê Minh Bách Chuyên",
-    "Trần Việt Dũng",
-    "Lê Anh Duy",
-    "Chu Thế Đạt",
-    "Nguyễn Quang Đạt",
-    "Lê Minh Hiếu",
-    "Võ Tá Hoàng",
-    "Nguyễn Tuấn Hùng",
-    "Phan Đức Huy",
-    "Phan Trung Kiên",
-    "Nguyễn Việt Khánh",
-    "Hoàng Minh Long",
-    "Trương Quốc Mạnh",
-    "Lê Hoàng Minh",
-    "Lê Quang Minh",
-    "Nguyễn Ngọc Minh",
-    "Nguyễn An Nguyên",
-    "Phạm Quang Nhật",
-    "Trần Đức Phúc",
-    "Nguyễn Ngọc Quang",
-    "Trần Lê Minh Quân",
-    "Cao Ngọc Trường Sơn",
-    "Nguyễn Khắc Thành Tôn",
-    "Lê Tuấn Tú",
-    "Bùi Minh Thái",
-    "Nguyễn Đăng Thành",
-    "Cao Anh Vũ"
+  // ========================================================
+  // 👥 DANH SÁCH MẪU DEMO (Khi chạy xem trước offline / chưa kết nối API)
+  // Danh sách thật CHUẨN DUY NHẤT luôn được tự động nạp từ api/_members.js qua /api/members
+  // ========================================================
+  const DEMO_MEMBERS = [
+    { id: 1, name: "Tên thành viên 1", paidAmount: 210000 },
+    { id: 2, name: "Tên thành viên 2", paidAmount: 60000 },
+    { id: 3, name: "Tên thành viên 3", paidAmount: 0 }
   ];
-
-  const DEFAULT_MEMBERS = MEMBER_NAMES.map((name, i) => ({
-    id: i + 1,
-    name,
-    paidAmount: 0
-  }));
 
   // Quy tắc mốc màu cố định
   const colorRules = { greenMin: 210000, yellowMin: 60000 };
   try { localStorage.removeItem('q_quy_color_rules'); } catch(e) {}
 
-  // Khởi tạo danh sách từ cache cục bộ (Zero Latency)
+  // Khởi tạo danh sách từ cache nạp lần gần nhất (Zero Latency) hoặc danh sách demo
   let members = (function() {
     try {
       localStorage.removeItem('q_quy_members_v3');
       localStorage.removeItem('q_quy_members_v4');
-      const cached = localStorage.getItem('q_quy_members_v5');
+      localStorage.removeItem('q_quy_members_v5');
+      const cached = localStorage.getItem('q_quy_members_v6');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length === MEMBER_NAMES.length) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       }
     } catch(e) {}
-    return DEFAULT_MEMBERS;
+    return DEMO_MEMBERS;
   })();
 
   let currentFilter = 'all';
@@ -904,27 +875,43 @@
     document.getElementById('legend-red-label').textContent = `Chưa đủ: < ${formatMoney(colorRules.yellowMin)}`;
   }
 
-  // FETCH DỮ LIỆU TỪ SERVER VERCEL API
+  // FETCH DỮ LIỆU TỪ SERVER VERCEL API (NGUỒN DỮ LIỆU CHUẨN DUY NHẤT TỪ api/_members.js)
   async function fetchServerData() {
-    if (window.location.protocol === 'file:') return;
+    if (window.location.protocol === 'file:') {
+      const syncEl = document.getElementById('sync-label');
+      if (syncEl) syncEl.textContent = 'Chế độ Demo (Offline)';
+      return;
+    }
     try {
-      const res = await fetch(API_ENDPOINT);
+      // Chống triệt để Browser & CDN Cache bằng query timestamp và header no-store
+      const res = await fetch(`${API_ENDPOINT}?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       if (res.ok) {
         const data = await res.json();
         if (data && data.members && Array.isArray(data.members)) {
-          // Lấy danh sách thành viên và số dư chính xác từ server làm chuẩn
+          // Lấy danh sách thành viên và số dư chính xác từ server làm chuẩn duy nhất
           members = data.members.map(sm => ({
             ...sm,
             paidAmount: Number(sm.paidAmount || 0)
           }));
 
+          if (data.bank) {
+            Object.assign(BANK_CONFIG, data.bank);
+          }
+
           try {
-            localStorage.setItem('q_quy_members_v5', JSON.stringify(members));
+            localStorage.setItem('q_quy_members_v6', JSON.stringify(members));
           } catch(e) {}
 
           updateKPIs();
           renderTable();
-          document.getElementById('sync-label').textContent = 'Đồng bộ tự động trực tuyến';
+          const syncEl = document.getElementById('sync-label');
+          if (syncEl) syncEl.textContent = 'Đồng bộ tự động trực tuyến';
           return;
         }
       }
@@ -934,7 +921,7 @@
   }
 
   function updateKPIs() {
-    const total = members.length || 22;
+    const total = members.length || 0;
     let greenCount = 0;
     let yellowCount = 0;
     let redCount = 0;
